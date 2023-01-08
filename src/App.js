@@ -1,6 +1,3 @@
-// React
-import React from 'react';
-
 // Blockly
 import Blockly from "blockly";
 import { createPlayground, toolboxCategories } from "@blockly/dev-tools";
@@ -52,15 +49,54 @@ const lolaToolbox = `
 </xml>
 `
 
-const createWorkspace = (blocklyDiv, options) => {
-  return Blockly.inject(blocklyDiv, options);
-};
+export default function App() {
+  setBackgroundColour();
+  createPlayground();
+}
+
+// function start() {
+//   setBackgroundColour();
+//   createPlayground();
+// }
+
+function createWorkspace(blocklyDiv, options) {
+  var workspace = Blockly.inject(blocklyDiv, options);
+  workspace.configureContextMenu = configureContextMenu.bind(workspace);
+
+  workspace.registerButtonCallback('createVariableButton', function(button) {
+    Blockly.Variables.createVariable(button.getTargetWorkspace(), null, '');
+  });
+
+  return workspace;
+}
+
+function configureContextMenu(menuOptions, e) {
+  var workspace = this;
+  var screenshotOption = {
+    text: 'Download Screenshot',
+    enabled: workspace.getTopBlocks().length,
+    callback: function() {
+      Blockly.downloadScreenshot(workspace);
+    }
+  };
+  menuOptions.push(screenshotOption);
+
+  // Adds a default-sized workspace comment to the workspace.
+  menuOptions.push(Blockly.ContextMenu.workspaceCommentOption(workspace, e));
+}
 
 const playgroundConfig = {
   toolboxes: {
     'categories': toolboxCategories,
     
   }
+}
+
+function setBackgroundColour() {
+  // Set background colour to differentiate server vs local copy.
+  var lilac = '#d6d6ff';
+  document.body.style.backgroundColor = lilac;
+  
 }
 
 const defaultOptions = {
@@ -79,7 +115,7 @@ const defaultOptions = {
   maxBlocks: Infinity,
   maxInstances: {'test_basic_limit_instances': 3},
   maxTrashcanContents: 256,
-  media: '../../media/',
+  media: '../node_modules/blockly/media/',
   oneBasedIndex: true,
   readOnly: false,
   theme: Blockly.Themes.Dark,
@@ -91,7 +127,7 @@ const defaultOptions = {
   },
   toolbox: lolaToolbox,
   toolboxPosition: 'start',
-  renderer: 'geras',
+  renderer: 'zelos',
   zoom:
     {
       controls: true,
@@ -102,10 +138,6 @@ const defaultOptions = {
       scaleSpeed: 1.1
     }
 };
-
-export default function App() {
-  createPlayground()
-}
 
 function configurePlayground(playground) {
   // Rendering options.

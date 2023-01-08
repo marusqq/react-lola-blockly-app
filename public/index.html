@@ -13,6 +13,29 @@
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <title>Blockly - Lola generator</title>
   </head>
+
+  <style>
+    html, body {
+      margin: 0;
+    }
+  
+    .ioLabel>.blocklyFlyoutLabelText {
+      font-style: italic;
+    }
+  
+    .playgroundToggleOptions {
+      list-style: none;
+      padding: 0;
+    }
+    .playgroundToggleOptions li {
+      margin-top: 1em;
+    }
+  
+    .zelos-renderer .blocklyFlyoutButton .blocklyText {
+      font-size: 1.5rem;
+    }
+  </style>
+
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="blocklyArea"></div>
