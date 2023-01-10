@@ -1,15 +1,16 @@
 import Blockly from "blockly";
-// import Blockly from 'blockly/core';
-import BlocklyCore from "blockly/core"
 import DarkTheme from '@blockly/theme-dark'
+
 import * as lola from './Lola/lola.js';
-import * as blocks from "./Lola/lolaBlocks.js"
-// import  "@blockly/theme-dark"
+import * as blocks from "./Lola/blocks.js"
+
 import {toolboxCategories, createPlayground} from "@blockly/dev-tools";
-import { BlocklyWorkspace } from "react-blockly";
 
 // constants
 // const lolaGenerator = new Blockly.Generator('Lola')
+
+var _ = blocks
+console.log(_)
 
         
 function configureContextMenu(menuOptions, e) {
