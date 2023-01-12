@@ -8,7 +8,10 @@ import {
 import * as lola from './Lola/lola.js';
 import * as examples from './Lola/examples.js';
 import {
-    dividerExample, fpaAdderExample, fpDividerExample, fpMultiplierExample,
+    dividerExample,
+    fpaAdderExample,
+    fpDividerExample,
+    fpMultiplierExample,
     leftShifterExample,
     multiplierExample,
     rightShifterExample,
@@ -17,8 +20,8 @@ import {
 
 
 function configureContextMenu(menuOptions, e) {
-    var workspace = this;
-    var screenshotOption = {
+    let workspace = this;
+    let screenshotOption = {
         text: 'Download Screenshot',
         enabled: workspace.getTopBlocks().length,
         callback: function () {
@@ -115,7 +118,7 @@ function configurePlayground(playground) {
             ws.setTheme(ws.getTheme(''));
         });
 
-    // Lola folder in workplace
+    // add Lola folders in workplace
 
     // /Lola/
     let lolaFolder = gui.addFolder('Lola')
@@ -139,6 +142,9 @@ function configurePlayground(playground) {
     wirthRiscFolder.add({"FPAAdder.Lola": examples.fpaAdderExample}, "FPAAdder.Lola").onChange();
     wirthRiscFolder.add({"FPMultiplier.Lola": examples.fpMultiplierExample}, "FPMultiplier.Lola").onChange();
     wirthRiscFolder.add({"FPDivider.Lola": examples.fpDividerExample}, "FPDivider.Lola").onChange();
+
+    // remove unneeded folders
+    // console.log(gui.get())
 }
 
 // create playground:
@@ -161,7 +167,7 @@ createPlayground(
 
 
 function createWorkspace(blocklyDiv, options) {
-    var workspace = Blockly.inject(blocklyDiv, options);
+    let workspace = Blockly.inject(blocklyDiv, options);
     workspace.configureContextMenu = configureContextMenu.bind(workspace);
 
     workspace.registerButtonCallback('createVariableButton', function (button) {

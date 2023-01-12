@@ -4,7 +4,7 @@ import Blockly from "blockly";
 export const generator = generateLolaGenerator()
 
 function generateLolaGenerator() {
-    var generator = new Blockly.Generator('Lola');
+    let generator = new Blockly.Generator('Lola');
 
     generator.ORDER_ATOMIC = 0; // 0 "" ...
     generator.ORDER_COLLECTION = 1; // tuples, lists, dictionaries
@@ -56,17 +56,17 @@ function generateLolaGenerator() {
         this.nameDB_.populateVariables(workspace);
         this.nameDB_.populateProcedures(workspace);
 
-        var defvars = [];
+        let defvars = [];
         // Add developer variables (not created or named by the user).
-        var devVarList = Blockly.Variables.allDeveloperVariables(workspace);
-        for (var i = 0; i < devVarList.length; i++) {
+        let devVarList = Blockly.Variables.allDeveloperVariables(workspace);
+        for (let i = 0; i < devVarList.length; i++) {
             defvars.push(this.nameDB_.getName(devVarList[i],
                 Blockly.Names.DEVELOPER_VARIABLE_TYPE) + ' = None');
         }
 
         // Add user variables, but only ones that are being used.
-        var variables = Blockly.Variables.allUsedVarModels(workspace);
-        for (var i = 0; i < variables.length; i++) {
+        let variables = Blockly.Variables.allUsedVarModels(workspace);
+        for (let i = 0; i < variables.length; i++) {
             defvars.push(this.nameDB_.getName(variables[i].getId(),
                 Blockly.VARIABLE_CATEGORY_NAME) + ' = None');
         }
@@ -89,7 +89,7 @@ function generateLolaGenerator() {
         const module_name = block.getFieldValue('module_name')
 
         // full converted module code:
-        var module_code;
+        let module_code;
 
         // MODULE
         module_code = 'MODULE ' + module_name + ';\n\n';
@@ -120,7 +120,7 @@ function generateLolaGenerator() {
         const type_name = block.getFieldValue('type_name');
 
         // full converted type code:
-        var type_code;
+        let type_code;
 
         // TYPE
         type_code = 'TYPE ' + type_name + ';\n';
@@ -149,7 +149,7 @@ function generateLolaGenerator() {
 
         const variable_type = block.getFieldValue('variable_type')
 
-        var test;
+        let test;
 
         test = variable_in_out_type + ' ' + variable_in_out.trim() + ':' + variable_type.trim() + ';'; //+ variable_in_out_type;
 
@@ -158,25 +158,25 @@ function generateLolaGenerator() {
 
     // Variable setter
     generator['variables_set'] = function(block) {
-        var argument0 = generator.valueToCode(block, 'VALUE',
+        let argument0 = generator.valueToCode(block, 'VALUE',
             generator.ORDER_NONE) || '0';
-        var varName = generator.nameDB_.getName(block.getFieldValue('VAR'),
+        let varName = generator.nameDB_.getName(block.getFieldValue('VAR'),
             Blockly.VARIABLE_CATEGORY_NAME);
 
-        var code = varName + ':=' + argument0 + ';'
+        let code = varName + ':=' + argument0 + ';'
         return code
     };
 
     // Variable getter
     generator['variables_get'] = function(block) {
-        var value = generator.valueToCode(block, 'VALUE',
+        let value = generator.valueToCode(block, 'VALUE',
             generator.ORDER_NONE) || '0';
         return [value, generator.ORDER_NONE]
     };
 
     // Variable name getter
     generator['variables_name_get'] = function(block) {
-        var varName = generator.nameDB_.getName(block.getFieldValue('VAR'),
+        let varName = generator.nameDB_.getName(block.getFieldValue('VAR'),
             Blockly.VARIABLE_CATEGORY_NAME);
         return [varName, generator.ORDER_NONE]
     };
@@ -189,54 +189,54 @@ function generateLolaGenerator() {
 
     // Math arithmetic block
     generator['math_arithmetic'] = function(block) {
-        var OPERATORS = {
+        let OPERATORS = {
             'ADD': ['+', generator.ORDER_ADDITIVE],
             'MINUS': ['-', generator.ORDER_ADDITIVE],
             'MULTIPLY': ['*', generator.ORDER_MULTIPLICATIVE],
             'DIVIDE': ['/', generator.ORDER_MULTIPLICATIVE],
             'POWER': ['**', generator.ORDER_EXPONENTIATION]
         };
-        var tuple = OPERATORS[block.getFieldValue('OP')];
-        var operator = tuple[0];
-        var order = tuple[1];
-        var argument0 = generator.valueToCode(block, 'A', order) || '0';
-        var argument1 = generator.valueToCode(block, 'B', order) || '0';
-        var code = argument0 + operator + argument1;
+        let tuple = OPERATORS[block.getFieldValue('OP')];
+        let operator = tuple[0];
+        let order = tuple[1];
+        let argument0 = generator.valueToCode(block, 'A', order) || '0';
+        let argument1 = generator.valueToCode(block, 'B', order) || '0';
+        let code = argument0 + operator + argument1;
         return [code, order];
     }
 
     // Math arithmetic three block 
     generator['math_arithmetic_three'] = function(block) {
-        var OPERATORS = {
+        let OPERATORS = {
             'ADD': ['+', generator.ORDER_ADDITIVE],
             'MINUS': ['-', generator.ORDER_ADDITIVE],
             'MULTIPLY': ['*', generator.ORDER_MULTIPLICATIVE],
             'DIVIDE': ['/', generator.ORDER_MULTIPLICATIVE],
             'POWER': ['**', generator.ORDER_EXPONENTIATION]
         };
-        var tuple1 = OPERATORS[block.getFieldValue('OP')];
-        var operator1 = tuple1[0];
+        let tuple1 = OPERATORS[block.getFieldValue('OP')];
+        let operator1 = tuple1[0];
         var order = tuple1[1];
 
-        var tuple2 = OPERATORS[block.getFieldValue('OP2')];
-        var operator2 = tuple2[0];
+        let tuple2 = OPERATORS[block.getFieldValue('OP2')];
+        let operator2 = tuple2[0];
         var order = tuple2[1];
 
-        var argument0 = generator.valueToCode(block, 'A', order) || '0';
-        var argument1 = generator.valueToCode(block, 'B', order) || '0';
-        var argument2 = generator.valueToCode(block, 'C', order) || '0';
-        var code = argument0 + operator1 + argument1 + operator2 + argument2;
+        let argument0 = generator.valueToCode(block, 'A', order) || '0';
+        let argument1 = generator.valueToCode(block, 'B', order) || '0';
+        let argument2 = generator.valueToCode(block, 'C', order) || '0';
+        let code = argument0 + operator1 + argument1 + operator2 + argument2;
         return [code, order];
     }
 
     // Math number block
     generator['math_number'] = function(block) {
-        var code = Number(block.getFieldValue('NUM'));
-        var order;
-        if (code == Infinity) {
+        let code = Number(block.getFieldValue('NUM'));
+        let order;
+        if (code === Infinity) {
             code = 'float("inf")';
             order = generator.ORDER_FUNCTION_CALL;
-        } else if (code == -Infinity) {
+        } else if (code === -Infinity) {
             code = '-float("inf")';
             order = generator.ORDER_UNARY_SIGN;
         } else {
@@ -248,9 +248,9 @@ function generateLolaGenerator() {
 
     // Constant declaration block
     generator['constant_declaration_block'] = function(block) {
-        var argument0 = generator.valueToCode(block, 'variable_value',
+        let argument0 = generator.valueToCode(block, 'variable_value',
             generator.ORDER_NONE) || '0';
-        var varName = generator.nameDB_.getName(block.getFieldValue('variable'),
+        let varName = generator.nameDB_.getName(block.getFieldValue('variable'),
             Blockly.VARIABLE_CATEGORY_NAME);
         return 'CONST ' + varName + ':=' + argument0 + ';'
     };
@@ -262,7 +262,7 @@ function generateLolaGenerator() {
         const values = [];
         // const qqq = generator.statementToCode(block, 'ADD0')
         // return qqq
-        for (var i = 0; i < block.itemCount_; i++) {
+        for (let i = 0; i < block.itemCount_; i++) {
             let valueCode = generator.statementToCode(block, 'ADD' + i);
             if (valueCode) {
                 values.push(valueCode);
@@ -277,18 +277,18 @@ function generateLolaGenerator() {
 
     // Loop
     generator['controls_for'] = function(block) {
-        var variable0 = generator.nameDB_.getName(
+        let variable0 = generator.nameDB_.getName(
             block.getFieldValue('VAR'), Blockly.VARIABLE_CATEGORY_NAME);
-        var argument0 = generator.valueToCode(block, 'FROM',
+        let argument0 = generator.valueToCode(block, 'FROM',
             generator.ORDER_NONE) || '0';
-        var argument1 = generator.valueToCode(block, 'TO',
+        let argument1 = generator.valueToCode(block, 'TO',
             generator.ORDER_NONE) || '0';
-        var increment = generator.valueToCode(block, 'BY',
+        let increment = generator.valueToCode(block, 'BY',
             generator.ORDER_NONE) || '1';
-        var branch = generator.statementToCode(block, 'DO');
+        let branch = generator.statementToCode(block, 'DO');
 
 
-        var code = 'FOR ' + variable0 + ':=' + argument0 + '..' + argument1 + ' DO\n'
+        let code = 'FOR ' + variable0 + ':=' + argument0 + '..' + argument1 + ' DO\n'
         code = code + branch + '\n'
         code = code + 'END;'
 
@@ -298,7 +298,7 @@ function generateLolaGenerator() {
 
     // Text
     generator['text'] = function(block) {
-        var text_value = block.getFieldValue('TEXT');
+        let text_value = block.getFieldValue('TEXT');
         return text_value
     };
 
