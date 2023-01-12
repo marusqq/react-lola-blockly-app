@@ -120,21 +120,21 @@ function configurePlayground(playground) {
         actionsFolder.removeFolder(folderToRemove)
     }
 
-    // Rendering
-    let renderingFolder = gui.addFolder('Rendering');
-    let renderingOptions = {'Font size': 10};
-
-    // add rendering function
-    renderingFolder.add(renderingOptions, 'Font size', 0, 50)
-        .onChange(function (value) {
-            let ws = playground.getWorkspace();
-            let fontStyle = {
-                'size': value
-            };
-            ws.getTheme().setFontStyle(fontStyle);
-            // Refresh theme.
-            ws.setTheme(ws.getTheme(''));
-        });
+    // Rendering - decided not to add right now
+    // let renderingFolder = gui.addFolder('Rendering');
+    // let renderingOptions = {'Font size': 10};
+    //
+    // // add rendering function
+    // renderingFolder.add(renderingOptions, 'Font size', 0, 50)
+    //     .onChange(function (value) {
+    //         let ws = playground.getWorkspace();
+    //         let fontStyle = {
+    //             'size': value
+    //         };
+    //         ws.getTheme().setFontStyle(fontStyle);
+    //         // Refresh theme.
+    //         ws.setTheme(ws.getTheme(''));
+    //     });
 
     // add Lola folders
     // /Lola/
