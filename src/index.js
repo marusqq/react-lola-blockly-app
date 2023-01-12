@@ -7,6 +7,9 @@ import {
 
 import * as lola from './Lola/lola.js';
 import * as examples from './Lola/examples.js';
+import * as blocks from "./Lola/blocks.js"
+import compileLola from "./Lola/compiler.js"
+
 import {
     dividerExample,
     fpaAdderExample,
@@ -80,10 +83,6 @@ const defaultOptions = {
     }
 };
 
-function compileLola() {
-    console.log('COMPILING LOLA')
-}
-
 function configurePlayground(playground) {
 
     // remove unneeded generators from playground
@@ -144,11 +143,8 @@ function configurePlayground(playground) {
     wirthRiscFolder.add({"FPDivider.Lola": examples.fpDividerExample}, "FPDivider.Lola").onChange();
 
     // remove unneeded folders
-    // console.log(gui.get())
+    console.log(gui.Folders)
 }
-
-// create playground:
-// on <div name='blocklyArea'></div>
 
 // create workspace: createWorkspace()
 // options: defaultOptions
