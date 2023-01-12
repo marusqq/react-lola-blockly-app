@@ -1,16 +1,19 @@
 import Blockly from "blockly";
-import BlocklyCore from "blockly/core"
 import DarkTheme from '@blockly/theme-dark'
-
-import * as lola from './Lola/lola.js';
-import * as blocks from "./Lola/blocks.js"
-import { spaghetti } from "@blockly/dev-tools";
-
-
 import {
     toolboxCategories,
     createPlayground
 } from "@blockly/dev-tools";
+
+import * as lola from './Lola/lola.js';
+import * as examples from './Lola/examples.js';
+import {
+    dividerExample, fpaAdderExample, fpDividerExample, fpMultiplierExample,
+    leftShifterExample,
+    multiplierExample,
+    rightShifterExample,
+    riscExample
+} from "./Lola/examples.js";
 
 
 function configureContextMenu(menuOptions, e) {
@@ -18,7 +21,7 @@ function configureContextMenu(menuOptions, e) {
     var screenshotOption = {
         text: 'Download Screenshot',
         enabled: workspace.getTopBlocks().length,
-        callback: function() {
+        callback: function () {
             Blockly.downloadScreenshot(workspace);
         }
     };
@@ -74,10 +77,9 @@ const defaultOptions = {
     }
 };
 
-function callback_peepee() {
-  console.log('callback_peepee')
+function compileLola() {
+    console.log('COMPILING LOLA')
 }
-
 
 function configurePlayground(playground) {
 
@@ -92,22 +94,20 @@ function configurePlayground(playground) {
 
     // add lola generator
     playground.addGenerator('Lola', lola.generator);
-    
+
     // Folders in playground
     // ------------------------------------------------------------
-    var gui = playground.getGUI();
+    let gui = playground.getGUI();
 
-    // add folder to playground
-    var renderingFolder = gui.addFolder('Rendering');
-    var renderingOptions = {
-        'Font size': 10,
-    };
+    // Rendering
+    let renderingFolder = gui.addFolder('Rendering');
+    let renderingOptions = {'Font size': 10};
 
     // add rendering function
     renderingFolder.add(renderingOptions, 'Font size', 0, 50)
-        .onChange(function(value) {
-            var ws = playground.getWorkspace();
-            var fontStyle = {
+        .onChange(function (value) {
+            let ws = playground.getWorkspace();
+            let fontStyle = {
                 'size': value
             };
             ws.getTheme().setFontStyle(fontStyle);
@@ -115,57 +115,30 @@ function configurePlayground(playground) {
             ws.setTheme(ws.getTheme(''));
         });
 
-    
-    console.log('gui:')
-    console.log(Object.getOwnPropertyNames(Object.getPrototypeOf(gui)));
+    // Lola folder in workplace
 
     // /Lola/
-    var lolaFolder = gui.addFolder('Lola')
-    // gui.destroy('Debug')
+    let lolaFolder = gui.addFolder('Lola')
+    lolaFolder.add({"Compile Lola": compileLola}, "Compile Lola").onChange();
 
     // /Lola/Examples
-    var examplesFolder = lolaFolder.addFolder('Examples')
-    console.log('folders:')
-    // examplesFolder.add.onPress(spaghetti)
-    examplesFolder.add().
+    let examplesFolder = lolaFolder.addFolder('Examples')
 
-    console.log(Object.getOwnPropertyNames(Object.getPrototypeOf(examplesFolder)));
-    
     // /Lola/Examples/Wirth RISCV
-    // var renderingOptions = {
-    //   'Font size': 10,
-    // };
-    
-    // var wirthRiscvFolder = examplesFolder.addFolder('Wirth RISC-V')
-    // wirthRiscvFolder.add.onPress(function(value) {
-    //   var ws = playground.getWorkspace();
-      
-    // });
+    let wirthRiscFolder = examplesFolder.addFolder('Wirth RISC5')
 
-    // var exampleFolder = gui.addFolder('Lola Examples');
-    // console.log('exampleFolder:')
-    // 
-    // riscvWirthFolder = exampleFolder.addFolder('RISC-v prof. Wirth')
-    // riscvWirthFolder.add()
-    
+    // add examples
+    wirthRiscFolder.add({"RISC5.Lola": examples.riscExample}, "RISC5.Lola").onChange();
 
+    wirthRiscFolder.add({"LeftShifter.Lola": examples.leftShifterExample}, "LeftShifter.Lola").onChange();
+    wirthRiscFolder.add({"RightShifter.Lola": examples.rightShifterExample}, "RightShifter.Lola").onChange();
 
-    // exampleFolder.addAction('action', callback_peepee)
-    
-    
-    // // add that rendering
-    // exampleFolder.add(renderingOptions, 'Examples', 0, 50)
-    //     .onChange(function(value) {
-    //         var ws = playground.getWorkspace();
-    //         var fontStyle = {
-    //             'size': value
-    //         };
-    //         ws.getTheme().setFontStyle(fontStyle);
-    //         // Refresh theme.
-    //         ws.setTheme(ws.getTheme(''));
-    //     });
+    wirthRiscFolder.add({"Multiplier.Lola": examples.multiplierExample}, "Multiplier.Lola").onChange();
+    wirthRiscFolder.add({"Divider.Lola": examples.dividerExample}, "Divider.Lola").onChange();
 
-    
+    wirthRiscFolder.add({"FPAAdder.Lola": examples.fpaAdderExample}, "FPAAdder.Lola").onChange();
+    wirthRiscFolder.add({"FPMultiplier.Lola": examples.fpMultiplierExample}, "FPMultiplier.Lola").onChange();
+    wirthRiscFolder.add({"FPDivider.Lola": examples.fpDividerExample}, "FPDivider.Lola").onChange();
 }
 
 // create playground:
@@ -177,12 +150,12 @@ function configurePlayground(playground) {
 // also => configurePlayground(playground)
 
 createPlayground(
-        document.getElementById('blocklyArea'),
-        createWorkspace,
-        defaultOptions,
-        playgroundConfig,
-        'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.19.2/min/vs')
-    .then(function(playground) {
+    document.getElementById('blocklyArea'),
+    createWorkspace,
+    defaultOptions,
+    playgroundConfig,
+    'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.19.2/min/vs')
+    .then(function (playground) {
         configurePlayground(playground);
     });
 
@@ -191,7 +164,7 @@ function createWorkspace(blocklyDiv, options) {
     var workspace = Blockly.inject(blocklyDiv, options);
     workspace.configureContextMenu = configureContextMenu.bind(workspace);
 
-    workspace.registerButtonCallback('createVariableButton', function(button) {
+    workspace.registerButtonCallback('createVariableButton', function (button) {
         Blockly.Variables.createVariableButtonHandler(button.getTargetWorkspace(), null, '');
     });
 
