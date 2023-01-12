@@ -102,6 +102,24 @@ function configurePlayground(playground) {
     // ------------------------------------------------------------
     let gui = playground.getGUI();
 
+    // modify folders from core Blockly playground
+    // -----------------------------------------------
+
+    // delete DEBUG
+    let debugFolder = gui.__folders['Debug']
+    gui.removeFolder(debugFolder)
+
+    // modify ACTIONS folder
+    let actionsFolder = gui.__folders['Actions']
+
+    let foldersToRemove = ['Visibility', 'Scale', 'Stress Test', 'Logging', 'Accessibility']
+    let folderToRemove = ""
+
+    for (const folderName of foldersToRemove) {
+        folderToRemove = actionsFolder.__folders[folderName]
+        actionsFolder.removeFolder(folderToRemove)
+    }
+
     // Rendering
     let renderingFolder = gui.addFolder('Rendering');
     let renderingOptions = {'Font size': 10};
@@ -118,8 +136,7 @@ function configurePlayground(playground) {
             ws.setTheme(ws.getTheme(''));
         });
 
-    // add Lola folders in workplace
-
+    // add Lola folders
     // /Lola/
     let lolaFolder = gui.addFolder('Lola')
     lolaFolder.add({"Compile Lola": compileLola}, "Compile Lola").onChange();
@@ -143,24 +160,6 @@ function configurePlayground(playground) {
     wirthRiscFolder.add({"FPMultiplier.Lola": examples.fpMultiplierExample}, "FPMultiplier.Lola").onChange();
     wirthRiscFolder.add({"FPDivider.Lola": examples.fpDividerExample}, "FPDivider.Lola").onChange();
 
-
-    // get folder to remove to remove unneeded folders
-    // console.log(gui.getWorkspace().getFlyout())
-    let ws = gui.getWorkspace();
-    let a = Object.getOwnPropertyNames(gui)
-    let b = Object.getOwnPropertyNames(ws)
-    let c = Object.getOwnPropertyNames(playground)
-    console.log(a)
-    console.log(b)
-    console.log(c)
-    console.log('-----------')
-
-
-    // remove unneeded folders
-
-    // console.log(ws.)
-
-    // gui.removeFolder()
 }
 
 // create workspace: createWorkspace()
