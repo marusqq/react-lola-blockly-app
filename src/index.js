@@ -1,5 +1,6 @@
 import Blockly from "blockly";
 import DarkTheme from '@blockly/theme-dark'
+
 import {
     toolboxCategories,
     createPlayground
@@ -7,8 +8,8 @@ import {
 
 import * as lola from './Lola/lola.js';
 import * as examples from './Lola/examples.js';
-import * as blocks from "./Lola/blocks.js"
 import compileLola from "./Lola/compiler.js"
+import * as blocks from "./Lola/blocks.js"
 
 import {
     dividerExample,
@@ -142,8 +143,24 @@ function configurePlayground(playground) {
     wirthRiscFolder.add({"FPMultiplier.Lola": examples.fpMultiplierExample}, "FPMultiplier.Lola").onChange();
     wirthRiscFolder.add({"FPDivider.Lola": examples.fpDividerExample}, "FPDivider.Lola").onChange();
 
+
+    // get folder to remove to remove unneeded folders
+    // console.log(gui.getWorkspace().getFlyout())
+    let ws = gui.getWorkspace();
+    let a = Object.getOwnPropertyNames(gui)
+    let b = Object.getOwnPropertyNames(ws)
+    let c = Object.getOwnPropertyNames(playground)
+    console.log(a)
+    console.log(b)
+    console.log(c)
+    console.log('-----------')
+
+
     // remove unneeded folders
-    console.log(gui.Folders)
+
+    // console.log(ws.)
+
+    // gui.removeFolder()
 }
 
 // create workspace: createWorkspace()
