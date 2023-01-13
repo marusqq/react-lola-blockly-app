@@ -18,10 +18,6 @@ function getTime() {
     return datetime
 }
 
-// This displays message that the server running and listening to specified port
-app.listen(port, () => console.log(`Listening on port ${port}`));
-
-
 app.post('/compile_lola', (req, res) => {
 
     console.log('-------------------')
@@ -103,3 +99,6 @@ app.post('/compile_lola', (req, res) => {
         })
 
 });
+
+// This displays message that the server running and listening to specified port
+app.listen(port, () => console.log(`Listening on port ${port}`));
