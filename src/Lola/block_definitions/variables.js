@@ -68,6 +68,10 @@ Blockly.defineBlocksWithJsonArray([
                     [
                         "VAR",
                         "VAR"
+                    ],
+                    [
+                        "WORD",
+                        "WORD"
                     ]
                 ]
             },
@@ -94,6 +98,10 @@ Blockly.defineBlocksWithJsonArray([
                     [
                         "OC",
                         "OC"
+                    ],
+                    [
+                        "WORD",
+                        "WORD"
                     ]
                 ]
             }

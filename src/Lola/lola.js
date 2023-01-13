@@ -171,14 +171,14 @@ function generateLolaGenerator() {
     generator['variables_get'] = function(block) {
         let value = generator.valueToCode(block, 'VALUE',
             generator.ORDER_NONE) || '0';
-        return [value, generator.ORDER_NONE]
+        return value
     };
 
     // Variable name getter
     generator['variables_name_get'] = function(block) {
         let varName = generator.nameDB_.getName(block.getFieldValue('VAR'),
             Blockly.VARIABLE_CATEGORY_NAME);
-        return [varName, generator.ORDER_NONE]
+        return varName
     };
 
     // Comment block

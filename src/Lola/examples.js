@@ -38,6 +38,10 @@ export function riscExample() {
         '    <next></next>',
         '  </block>'].join('\n');
 
+    const risc = [
+
+    ]
+
     _sendXmlToWorkspace(riscXml)
 }
 

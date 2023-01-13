@@ -61,7 +61,7 @@ const defaultOptions = {
         'test_basic_limit_instances': 3
     },
     maxTrashcanContents: 256,
-    media: '../node_modules/blockly/media/',
+    media: '/media',
     oneBasedIndex: true,
     readOnly: false,
     theme: DarkTheme,
