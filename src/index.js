@@ -25,17 +25,9 @@ import {
 
 function configureContextMenu(menuOptions, e) {
     let workspace = this;
-    let screenshotOption = {
-        text: 'Download Screenshot',
-        enabled: workspace.getTopBlocks().length,
-        callback: function () {
-            Blockly.downloadScreenshot(workspace);
-        }
-    };
-    menuOptions.push(screenshotOption);
 
     // Adds a default-sized workspace comment to the workspace.
-    // menuOptions.push(Blockly.ContextMenu.workspaceCommentOption(workspace, e));
+    menuOptions.push(Blockly.ContextMenu.workspaceCommentOption(workspace, e));
 }
 
 const playgroundConfig = {
