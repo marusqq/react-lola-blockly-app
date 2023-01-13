@@ -42,7 +42,8 @@ export default function compileLola() {
 
             }
             else
-                alert('Lola code is incorrect')
+                alert(`Lola code is incorrect\nErrors:\n${data.compilationErrors.join('\n')}`)
+
         })
         .catch((error) => {
             console.error('Error:', error);

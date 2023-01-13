@@ -3,13 +3,11 @@ const fs = require('fs')
 const subProcess = require('child_process')
 var bodyParser = require('body-parser')
 
-const app = express(); //Line 2
+const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded());     // to support URL-encoded bodies
-// app.use(express.json());
-// app.use(express.urlencoded());
 
 
 function getTime() {
@@ -31,6 +29,7 @@ app.post('/compile_lola', (req, res) => {
     let resp = {
         'status': 200,
         'compiled': true,
+        'compilationErrors': [],
         'verilogCode': ''
     }
 
@@ -58,40 +57,49 @@ app.post('/compile_lola', (req, res) => {
     console.log(`${getTime()} Compiling .Lola file`)
     subProcess.exec(`../Lola ${filenameLola} ${filenameVerilog}`,
         (err, stdout, stderr) => {
-        if (err) {
-            console.error(`${getTime()}: error: ${err}`)
-            process.exit(1)
-        } else {
-            let out = stdout.toString()
+            if (err) {
+                console.error(`${getTime()}: error: ${err}`)
+                process.exit(1)
+            } else {
+                let out = stdout.toString()
+                console.log(out)
 
-            // check output of compilation
-            let linesOfOutput = out.split('\n')
+                // check output of compilation
+                let linesOfOutput = out.split('\n')
+                let checkCompilation = true
 
-            for (const lineOfOutput of linesOfOutput) {
-                if (lineOfOutput.includes('compilation failed')) {
-                    resp.compiled = false
-                    break
+                for (const lineOfOutput of linesOfOutput) {
+                    if (lineOfOutput.includes('err:')) {
+                        resp.compilationErrors.push(lineOfOutput)
+                        if (checkCompilation) {
+                            resp.compiled = false
+                            checkCompilation = false
+                        }
+                    }
+                    if (lineOfOutput.includes('compilation failed') && checkCompilation) {
+                        resp.compiled = false
+                        checkCompilation = false
+                    }
                 }
-            }
-            
-            // if compiled, get verilog file info
-            if (resp.compiled)
-                resp.verilogCode = fs.readFileSync(filenameVerilog).toString()
+
+                // if compiled, get verilog file info
+                if (resp.compiled)
+                    resp.verilogCode = fs.readFileSync(filenameVerilog).toString()
 
 
-            // delete files
-            for (const filename of [filenameLola, filenameVerilog]) {
-                if (fs.existsSync(filename)) {
-                    fs.unlinkSync(filename)
-                    console.log(`${getTime()} file: ${filename}`)
+                // delete files
+                for (const filename of [filenameLola, filenameVerilog]) {
+                    if (fs.existsSync(filename)) {
+                        fs.unlinkSync(filename)
+                        console.log(`${getTime()} file: ${filename}`)
+                    }
                 }
-            }
 
-            // return response
-            console.log(`${getTime()} Returning ${JSON.stringify(resp)}`)
-            res.send(resp);
-            console.log('-------------------');
-        }
-    })
+                // return response
+                console.log(`${getTime()} Returning ${JSON.stringify(resp)}`)
+                res.send(resp);
+                console.log('-------------------');
+            }
+        })
 
 });
