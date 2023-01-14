@@ -66,7 +66,9 @@ app.post('/compile_lola', (req, res) => {
                         console.log(`${getTime()} delete file: ${filename}`)
                     }
                 }
-                
+
+                console.log('Set response.compiled = False and return with compilation errors')
+
                 resp.compiled = false
                 resp.compilationErrors.push('Compiler failed without errors')
                 resp.compilationErrors.push('Maybe there is nothing for compiler to compile')
