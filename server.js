@@ -1,7 +1,7 @@
 const express = require('express');
 const fs = require('fs')
 const subProcess = require('child_process')
-var bodyParser = require('body-parser')
+const bodyParser = require('body-parser')
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -17,6 +17,9 @@ function getTime() {
     let datetime = currentDate + " " + currentTime
     return datetime
 }
+
+// This displays message that the server running and listening to specified port
+app.listen(port, () => console.log(`Listening on port ${port}`));
 
 app.post('/compile_lola', (req, res) => {
 
@@ -51,13 +54,28 @@ app.post('/compile_lola', (req, res) => {
 
     // compile that file with Lola executable
     console.log(`${getTime()} Compiling .Lola file`)
-    subProcess.exec(`../Lola ${filenameLola} ${filenameVerilog}`,
+    subProcess.exec(`../Lola ${filenameLola} ${filenameVerilog}`, {timeout: 4000},
         (err, stdout, stderr) => {
             if (err) {
                 console.error(`${getTime()}: error: ${err}`)
-                process.exit(1)
+
+                // delete files
+                for (const filename of [filenameLola, filenameVerilog]) {
+                    if (fs.existsSync(filename)) {
+                        fs.unlinkSync(filename)
+                        console.log(`${getTime()} delete file: ${filename}`)
+                    }
+                }
+                
+                resp.compiled = false
+                resp.compilationErrors.push('Compiler failed without errors')
+                resp.compilationErrors.push('Maybe there is nothing for compiler to compile')
+                resp.compilationErrors.push('or compiler could not make sense of the code written')
+                res.send(resp);
             } else {
                 let out = stdout.toString()
+                let err = stderr.toString()
+                console.log(err)
                 console.log(out)
 
                 // check output of compilation
@@ -79,15 +97,17 @@ app.post('/compile_lola', (req, res) => {
                 }
 
                 // if compiled, get verilog file info
-                if (resp.compiled)
+                if (resp.compiled) {
+                    console.log(`${getTime()} reading compiled verilog file: ${filenameVerilog}`)
                     resp.verilogCode = fs.readFileSync(filenameVerilog).toString()
+                }
 
 
                 // delete files
                 for (const filename of [filenameLola, filenameVerilog]) {
                     if (fs.existsSync(filename)) {
                         fs.unlinkSync(filename)
-                        console.log(`${getTime()} file: ${filename}`)
+                        console.log(`${getTime()} delete file: ${filename}`)
                     }
                 }
 
@@ -99,6 +119,3 @@ app.post('/compile_lola', (req, res) => {
         })
 
 });
-
-// This displays message that the server running and listening to specified port
-app.listen(port, () => console.log(`Listening on port ${port}`));
