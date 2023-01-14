@@ -83,15 +83,21 @@ app.post('/compile_lola', (req, res) => {
                     console.log(`${getTime()} Set response.compiled = False and return with compilation errors`)
 
                     resp.compiled = false
-                    resp.compilationErrors.push('Compiler failed without giving any Lola errors')
-                    resp.compilationErrors.push('Maybe there is nothing for compiler to compile')
-                    resp.compilationErrors.push('or compiler could not make sense of the code written')
+                    if (stderr) {
+                        resp.compilationErrors.push(stderr.toString())
+                    } else {
+                        resp.compilationErrors.push('Compiler failed without giving any Lola errors')
+                        resp.compilationErrors.push('Maybe there is nothing for compiler to compile')
+                        resp.compilationErrors.push('or compiler could not make sense of the code written')
+                    }
+
                     res.send(JSON.stringify(resp));
+                    console.log('-------------------');
                 } else {
                     let out = stdout.toString()
                     let err = stderr.toString()
-                    console.log(err)
-                    console.log(out)
+                    // console.log(err)
+                    // console.log(out)
 
                     // check output of compilation
                     let linesOfOutput = out.split('\n')

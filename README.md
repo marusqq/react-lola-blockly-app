@@ -4,7 +4,7 @@ ___________________________________________________|____________|________|______
 - Make few examples from Wirth                     |     3      |    3   |  ~   |
 - Remove unneeded functionality                    |    1-2     |    4   |  +   |
 - Fix sprite, music issues                         |     2      |    3   |  +   |
-- Make compile button and use Lola to compile      |     5      |    5   |  !   | 
+- Make compile button and use Lola to compile      |     5      |    5   |  +   | 
 - Press on Lola generator automatically            |     1      |    3   |      |
 ___________________________________________________|____________|________|______|
 

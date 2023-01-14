@@ -37,7 +37,8 @@ cd ..
 pkill node
 
 # wait for few seconds
-echo "Wait for few seconds for nodes to die"
+echo "Wait for 5 seconds for nodes to die"
+sleep 5
 
 # frontend
 npm start > logs/client.log &

@@ -178,7 +178,8 @@ function generateLolaGenerator() {
     generator['variables_name_get'] = function(block) {
         let varName = generator.nameDB_.getName(block.getFieldValue('VAR'),
             Blockly.VARIABLE_CATEGORY_NAME);
-        return varName
+
+        return [varName, generator.ORDER_NONE]
     };
 
     // Comment block
@@ -299,7 +300,7 @@ function generateLolaGenerator() {
     // Text
     generator['text'] = function(block) {
         let text_value = block.getFieldValue('TEXT');
-        return text_value
+        return [text_value, generator.ORDER_NONE]
     };
 
     generator['logic_null'] = function(block) {
