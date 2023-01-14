@@ -60,8 +60,6 @@ export default function compileLola() {
             alert(`Lola code is incorrect\nErrors:\n${content.compilationErrors.join('\n')}`)
     })();
 
-    console.log(response)
-
 
     //
     // fetch('/compile_lola', {

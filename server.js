@@ -4,7 +4,7 @@ const subProcess = require('child_process')
 const bodyParser = require('body-parser')
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = 5000;
 
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded());     // to support URL-encoded bodies
@@ -67,13 +67,13 @@ app.post('/compile_lola', (req, res) => {
                     }
                 }
 
-                console.log('Set response.compiled = False and return with compilation errors')
+                console.log(`${getTime()} Set response.compiled = False and return with compilation errors`)
 
                 resp.compiled = false
                 resp.compilationErrors.push('Compiler failed without errors')
                 resp.compilationErrors.push('Maybe there is nothing for compiler to compile')
                 resp.compilationErrors.push('or compiler could not make sense of the code written')
-                res.send(resp);
+                res.send(JSON.stringify(resp));
             } else {
                 let out = stdout.toString()
                 let err = stderr.toString()
@@ -115,7 +115,7 @@ app.post('/compile_lola', (req, res) => {
 
                 // return response
                 console.log(`${getTime()} Returning ${JSON.stringify(resp)}`)
-                res.send(resp);
+                res.send(JSON.stringify(resp));
                 console.log('-------------------');
             }
         })
