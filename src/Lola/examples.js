@@ -2,6 +2,18 @@ import Blockly from "blockly/core";
 
 function _sendXmlToWorkspace(xml, addXml) {
 
+    if (addXml)
+        xml = '<xml>' + xml + '</xml>';
+
+    // confirm that xml is valid
+    let dom = ''
+    try {
+        dom = Blockly.Xml.textToDom(xml);
+    } catch (error) {
+        alert(`Reading XML failed.\n${error}`);
+        return
+    }
+
     let confirmed = window.confirm(
         'CAUTION! The whole workspace will be cleared.\nWould you like to save your work by downloading XML?')
 
@@ -11,10 +23,9 @@ function _sendXmlToWorkspace(xml, addXml) {
     // clear variables
     Blockly.getMainWorkspace().clear()
 
-    if (addXml)
-        xml = '<xml>' + xml + '</xml>';
-    const dom = Blockly.Xml.textToDom(xml);
+    // write xml to workspace
     Blockly.Xml.domToWorkspace(dom, Blockly.getMainWorkspace());
+
 }
 
 function save(filename, data) {
@@ -46,7 +57,12 @@ function formatXML(xml, tab = '\t', nl = '\n') {
 
 export function importXml() {
     let xml = prompt('Paste your XML here', 'yourXML')
-    _sendXmlToWorkspace(xml, false)
+
+    // if something is entered
+    if (xml)
+        _sendXmlToWorkspace(xml, false)
+    else
+        alert("No XML entered")
 }
 
 export function downloadAsXml() {
