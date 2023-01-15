@@ -20,6 +20,8 @@ export default function compileLola() {
 
     let generatedCode = lola.generator.workspaceToCode(Blockly.getMainWorkspace())
 
+
+
     let _ = (async () => {
         const rawResponse = await fetch('/compile_lola', {
             method: 'POST',

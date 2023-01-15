@@ -133,6 +133,8 @@ function configurePlayground(playground) {
     let lolaFolder = gui.addFolder('Lola')
     lolaFolder.add({"Compile Lola": compileLola}, "Compile Lola").onChange();
 
+    lolaFolder.add({"Download as XML": examples.downloadAsXml}, "Download as XML").onChange();
+
     // /Lola/Examples
     let examplesFolder = lolaFolder.addFolder('Examples')
 
