@@ -72,7 +72,11 @@ Blockly.defineBlocksWithJsonArray([
                 [
                     "WORD",
                     "WORD"
-                ]
+                ],
+                [
+                    "BYTE",
+                    "BYTE"
+                ],
             ]
         },
             {
@@ -98,7 +102,11 @@ Blockly.defineBlocksWithJsonArray([
                     [
                         "WORD",
                         "WORD"
-                    ]
+                    ],
+                    [
+                        "BYTE",
+                        "BYTE"
+                    ],
                 ]
             }
         ],
@@ -140,7 +148,11 @@ Blockly.defineBlocksWithJsonArray([
                     [
                         "WORD",
                         "WORD"
-                    ]
+                    ],
+                    [
+                        "BYTE",
+                        "BYTE"
+                    ],
                 ]
             }
         ],

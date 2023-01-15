@@ -435,7 +435,7 @@ export const toolbox = `
       <block type="controls_for"/>
     </category>
 
-    <category name="Text">
+    <category name="Comments">
       <block type="comment_block"/>
     </category>
 

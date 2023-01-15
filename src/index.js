@@ -152,15 +152,18 @@ function configurePlayground(playground) {
     wirthRiscFolder.add({"FPMultiplier.Lola": examples.fpMultiplierExample}, "FPMultiplier.Lola").onChange();
     wirthRiscFolder.add({"FPDivider.Lola": examples.fpDividerExample}, "FPDivider.Lola").onChange();
 
+    // /Lola/Examples/Wirth Small Programs
+    let wirthSmallPrograms = examplesFolder.addFolder('Wirth Small Programs')
+
+    wirthSmallPrograms.add({"Counter.Lola": examples.counterExample}, "Counter.Lola").onChange();
+    wirthSmallPrograms.add({"Shifter.Lola": examples.shifterExample}, "Shifter.Lola").onChange();
+
+
+
     // ADD XML options
     gui.add({"Download as XML": examples.downloadAsXml}, "Download as XML").onChange();
     gui.add({"Import XML": examples.importXml}, "Import XML").onChange();
 }
-
-// create workspace: createWorkspace()
-// options: defaultOptions
-// playground: playgroundConfig
-// also => configurePlayground(playground)
 
 createPlayground(
     document.getElementById('blocklyArea'),
