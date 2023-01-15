@@ -45,8 +45,8 @@ function formatXML(xml, tab = '\t', nl = '\n') {
 }
 
 export function importXml() {
-    alert('Not implemented')
-    console.log('importing XML')
+    let xml = prompt('Paste your XML here', 'yourXML')
+    _sendXmlToWorkspace(xml, false)
 }
 
 export function downloadAsXml() {
