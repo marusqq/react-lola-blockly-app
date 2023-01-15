@@ -343,21 +343,17 @@ function generateLolaGenerator() {
     ////// -------------------------------------------
 
     // Array
-    generator['lists_create_with'] = function (block) {
+    generator['lists_create_with'] = function(block) {
         const values = [];
-        // const qqq = generator.statementToCode(block, 'ADD0')
-        // return qqq
         for (let i = 0; i < block.itemCount_; i++) {
-            let valueCode = generator.statementToCode(block, 'ADD' + i);
+            const valueCode = generator.valueToCode(block, 'ADD' + i,
+                generator.ORDER_NONE);
             if (valueCode) {
                 values.push(valueCode);
             }
         }
-        const valueString = values.join(',\n');
-        const indentedValueString =
-            generator.prefixLines(valueString, generator.INDENT);
-        const codeString = '[\n' + indentedValueString + '\n]';
-        return [codeString, generator.ORDER_NONE];
+
+        return [values.join(', '), generator.ORDER_NONE]
     };
 
     // Loop
@@ -405,20 +401,6 @@ function generateLolaGenerator() {
     generator['text_helper_statement_no_semicolon'] = function (block) {
         return block.getFieldValue('text_help')
     }
-
-    // ---------------------- LISTS -----------------------------------
-    generator['lists_create_with'] = function(block) {
-        const values = [];
-        for (let i = 0; i < block.itemCount_; i++) {
-            const valueCode = generator.valueToCode(block, 'ADD' + i,
-                generator.ORDER_NONE);
-            if (valueCode) {
-                values.push(valueCode);
-            }
-        }
-
-        return values.join(', ')
-    };
 
     return generator
 }
