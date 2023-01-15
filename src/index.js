@@ -133,8 +133,6 @@ function configurePlayground(playground) {
     let lolaFolder = gui.addFolder('Lola')
     lolaFolder.add({"Compile Lola": compileLola}, "Compile Lola").onChange();
 
-    lolaFolder.add({"Download as XML": examples.downloadAsXml}, "Download as XML").onChange();
-
     // /Lola/Examples
     let examplesFolder = lolaFolder.addFolder('Examples')
 
@@ -154,6 +152,9 @@ function configurePlayground(playground) {
     wirthRiscFolder.add({"FPMultiplier.Lola": examples.fpMultiplierExample}, "FPMultiplier.Lola").onChange();
     wirthRiscFolder.add({"FPDivider.Lola": examples.fpDividerExample}, "FPDivider.Lola").onChange();
 
+    // ADD XML options
+    gui.add({"Download as XML": examples.downloadAsXml}, "Download as XML").onChange();
+    gui.add({"Import XML": examples.importXml}, "Import XML").onChange();
 }
 
 // create workspace: createWorkspace()

@@ -1,6 +1,16 @@
 import Blockly from "blockly/core";
 
 function _sendXmlToWorkspace(xml, addXml) {
+
+    let confirmed = window.confirm(
+        'CAUTION! The whole workspace will be cleared.\nWould you like to save your work by downloading XML?')
+
+    if (confirmed)
+        downloadAsXml()
+
+    // clear variables
+    Blockly.getMainWorkspace().clear()
+
     if (addXml)
         xml = '<xml>' + xml + '</xml>';
     const dom = Blockly.Xml.textToDom(xml);
@@ -8,7 +18,7 @@ function _sendXmlToWorkspace(xml, addXml) {
 }
 
 function save(filename, data) {
-    const blob = new Blob([data], {type: 'text/csv'});
+    const blob = new Blob([data], {type: 'text/xml'});
     if (window.navigator.msSaveOrOpenBlob) {
         window.navigator.msSaveBlob(blob, filename);
     } else {
@@ -29,9 +39,14 @@ function formatXML(xml, tab = '\t', nl = '\n') {
         const node = nodes[i];
         if (node[0] == '/') indent = indent.slice(tab.length); // decrease indent
         formatted += indent + '<' + node + '>' + nl;
-        if (node[0] != '/' && node[node.length - 1] != '/' && node.indexOf('</') == -1) indent += tab; // increase indent
+        if (node[0] != '/' && node[node.length - 1] != '/' && node.indexOf('</') == -1) indent += tab;
     }
     return formatted;
+}
+
+export function importXml() {
+    alert('Not implemented')
+    console.log('importing XML')
 }
 
 export function downloadAsXml() {
@@ -550,9 +565,7 @@ export function multiplierExample() {
   </block>
 </xml>
 `
-
     _sendXmlToWorkspace(multiplierXml, false)
-    console.log('Multiplier example')
 }
 
 export function dividerExample() {
