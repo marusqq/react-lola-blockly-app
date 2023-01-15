@@ -67,7 +67,7 @@ app.post('/compile_lola', (req, res) => {
 
         // compile that file with Lola executable
         console.log(`${getTime()} Compiling .Lola file`)
-        subProcess.exec(`../Lola ${filenameLola} ${filenameVerilog}`, {timeout: 4000},
+        let child = subProcess.exec(`../Lola ${filenameLola} ${filenameVerilog}`, {timeout: 4000},
             (err, stdout, stderr) => {
                 if (err) {
                     console.error(`${getTime()}: error: ${err}`)
@@ -91,6 +91,7 @@ app.post('/compile_lola', (req, res) => {
                         resp.compilationErrors.push('or compiler could not make sense of the code written')
                     }
 
+                    child.kill("SIGINT")
                     res.send(JSON.stringify(resp));
                     console.log('-------------------');
                 } else {
@@ -133,6 +134,7 @@ app.post('/compile_lola', (req, res) => {
                     }
 
                     // return response
+                    child.kill("SIGINT")
                     console.log(`${getTime()} Returning ${JSON.stringify(resp)}`)
                     res.send(JSON.stringify(resp));
                     console.log('-------------------');
