@@ -1,5 +1,6 @@
 {
   "name": "react-lola-blockly-app",
+  "homepage": "https://lola-blockly.org",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
