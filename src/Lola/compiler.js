@@ -16,34 +16,64 @@ function save(filename, data) {
 }
 
 
-export default function compileLola() {
+export async function convertLolaToVerilog() {
 
-    let generatedCode = lola.generator.workspaceToCode(Blockly.getMainWorkspace())
+    // get generated code
+    const generatedCode = lola.generator.workspaceToCode(Blockly.getMainWorkspace());
 
-    let _ = (async () => {
-        const rawResponse = await fetch('/compile_lola', {
+    try {
+        const response = await fetch('/compile_lola', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({'code': generatedCode})
+            body: JSON.stringify({code: generatedCode})
         });
-        const content = await rawResponse.json();
+
+        const content = await response.json();
 
         if (content.compiled) {
-            let download = window.confirm('' +
+            const download = window.confirm(
                 'Lola code was compiled and is correct\n' +
-                'Do you want to download it as verilog?')
+                'Do you want to download it as verilog?'
+            );
 
-            if (download)
-                save('verilog.v', content.verilogCode)
-
-        } else
-            alert(`Lola code is incorrect\nErrors:\n${content.compilationErrors.join('\n')}`)
-    })();
-
-
+            if (download) {
+                save('verilog.v', content.verilogCode);
+            }
+        } else {
+            alert(`Lola code is incorrect\nErrors:\n${content.compilationErrors.join('\n')}`);
+        }
+    } catch (error) {
+        console.error(error);
+    }
 }
 
+export async function checkLolaCodeValid() {
 
+    // get generated code
+    const generatedCode = lola.generator.workspaceToCode(Blockly.getMainWorkspace());
+
+    try {
+        const response = await fetch('/check_valid_lola', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({code: generatedCode})
+        });
+
+        const content = await response.json();
+
+        if (content.valid) {
+            alert(`Lola code is correct`);
+        } else {
+            alert(`Lola code is incorrect\nErrors:\n${content.compilationErrors.join('\n')}`);
+        }
+
+    } catch (error) {
+        console.error(error);
+    }
+}

@@ -183,6 +183,7 @@ app.post('/check_valid_lola', async (req, res) => {
     let resp = {
         'status': 200,
         'valid': false,
+        'compilationErrors': [],
     }
 
     console.log(`${getTime()} Trying to compile lola code...`);
@@ -190,6 +191,7 @@ app.post('/check_valid_lola', async (req, res) => {
         // try compiling lola code
         console.log(`${getTime()} compileLolaDict: ${JSON.stringify(compiledDict)}`);
         resp.valid = compiledDict.compiled
+        resp.compilationErrors = compiledDict.compilationErrors
         console.log(`${getTime()} response: ${JSON.stringify(resp)}`);
         console.log('--- /check_valid_lola endpoint call END ---')
         res.send(JSON.stringify(resp));

@@ -8,7 +8,7 @@ import {
 
 import * as lola from './Lola/lola.js';
 import * as examples from './Lola/examples.js';
-import compileLola from "./Lola/compiler.js"
+import { convertLolaToVerilog, checkLolaCodeValid } from "./Lola/compiler.js"
 import * as blocks from "./Lola/blocks.js"
 
 import {
@@ -131,7 +131,8 @@ function configurePlayground(playground) {
     // add Lola folders
     // /Lola/
     let lolaFolder = gui.addFolder('Lola')
-    lolaFolder.add({"Compile Lola": compileLola}, "Compile Lola").onChange();
+    lolaFolder.add({"Validate Lola code": checkLolaCodeValid}, "Validate Lola code").onChange();
+    lolaFolder.add({"Convert Lola to Verilog": convertLolaToVerilog}, "Convert Lola to Verilog").onChange();
 
     // /Lola/Examples
     let examplesFolder = lolaFolder.addFolder('Examples')
