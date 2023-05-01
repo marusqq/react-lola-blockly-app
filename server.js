@@ -19,7 +19,7 @@ function getTime() {
 }
 
 // This displays message that the server running and listening to specified port
-app.listen(port, () => console.log(`Listening on port ${port}`));
+app.listen(port, '127.0.0.1', () => console.log(`Listening on port ${port}`));
 
 app.post('/compile_lola', (req, res) => {
 
