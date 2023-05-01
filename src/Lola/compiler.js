@@ -19,7 +19,6 @@ function save(filename, data) {
 export default function compileLola() {
 
     let generatedCode = lola.generator.workspaceToCode(Blockly.getMainWorkspace())
-    console.log(generatedCode)
 
     let _ = (async () => {
         const rawResponse = await fetch('/compile_lola', {
@@ -30,9 +29,7 @@ export default function compileLola() {
             },
             body: JSON.stringify({'code': generatedCode})
         });
-        console.log(rawResponse)
         const content = await rawResponse.json();
-        console.log(content)
 
         if (content.compiled) {
             let download = window.confirm('' +

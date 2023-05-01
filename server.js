@@ -19,12 +19,12 @@ function getTime() {
 }
 
 // This displays message that the server running and listening to specified port
-app.listen(port, '127.0.0.1', () => console.log(`Listening on port ${port}`));
+app.listen(port, '127.0.0.1', () => console.log(`${getTime()} Listening on port ${port}`));
 
 app.post('/compile_lola', (req, res) => {
 
-    console.log('-------------------')
-    console.log('Received request with payload:', req.body);
+    console.log('------------------- /COMPILE_LOLA endpoint call START -------------------')
+    console.log(`${getTime()} Received request with payload: ${req.body}`);
 
     let resp = {
         'status': 200,
@@ -45,7 +45,7 @@ app.post('/compile_lola', (req, res) => {
         resp.compilationErrors.push('No code to compile')
         console.log(`${getTime()} Returning ${JSON.stringify(resp)}`)
         res.send(JSON.stringify(resp));
-        console.log('-------------------');
+        console.log('------------------- /COMPILE_LOLA endpoint call END -------------------');
 
     } else {
 
@@ -95,7 +95,7 @@ app.post('/compile_lola', (req, res) => {
                     child.kill("SIGINT")
                     console.log('Sending response:', resp, JSON.stringify(resp));
                     res.send(JSON.stringify(resp));
-                    console.log('-------------------');
+                    console.log('------------------- /COMPILE_LOLA endpoint call END -------------------');
                 } else {
                     let out = stdout.toString()
                     let err = stderr.toString()
