@@ -32,6 +32,7 @@ export default function compileLola() {
             body: JSON.stringify({'code': generatedCode})
         });
         const content = await rawResponse.json();
+        console.log(content)
 
         if (content.compiled) {
             let download = window.confirm('' +

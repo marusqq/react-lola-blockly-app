@@ -24,6 +24,7 @@ app.listen(port, () => console.log(`Listening on port ${port}`));
 app.post('/compile_lola', (req, res) => {
 
     console.log('-------------------')
+    console.log('Received request with payload:', req.body);
 
     let resp = {
         'status': 200,
@@ -92,6 +93,7 @@ app.post('/compile_lola', (req, res) => {
                     }
 
                     child.kill("SIGINT")
+                    console.log('Sending response:', resp, JSON.stringify(resp));
                     res.send(JSON.stringify(resp));
                     console.log('-------------------');
                 } else {
