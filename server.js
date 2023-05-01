@@ -9,138 +9,179 @@ const port = 5000;
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded());     // to support URL-encoded bodies
 
+async function compileLola(lolaCode) {
+    return new Promise((resolve, reject) => {
+        let compiled = true
+        let compilationErrors = []
+        let compiledVerilogCode = ''
 
-function getTime() {
+        if (lolaCode.length < 1) {
+
+            console.log(`${getTime()} - compileLola() - No Lola code found, compiled = False`)
+
+            let resultDict = {
+                "compiled": false,
+                "compilationErrors": ["No code to compile"],
+                "compiledVerilogCode": ''
+            }
+
+            console.log(`${getTime()} - compileLola() - returning: ${JSON.stringify(resultDict)}`);
+            resolve(resultDict)
+
+        } else {
+
+            // set unique name for files: blockly_yy_mm_dd_HH_MM_SS.Lola
+            let datetime = getTime("_")
+            let filenameLola = `compile/blockly_${datetime}.Lola`
+            let filenameVerilog = `compile/blockly_${datetime}.v`
+
+            // create file and write lola code into the newly created file
+            console.log(`${getTime()} - compileLola() - Creating file: ${filenameLola}`)
+            fs.writeFileSync(filenameLola, lolaCode)
+
+            // compile that file with Lola executable
+            console.log(`${getTime()} - compileLola() - Compiling .Lola file with subProcess`)
+            let child = subProcess.exec(`../Lola ${filenameLola} ${filenameVerilog}`, {timeout: 4000},
+                (err, stdout, stderr) => {
+                    if (err) {
+                        console.error(`${getTime()} - compileLola() - error: ${err}`)
+
+                        // delete files
+                        for (const filename of [filenameLola, filenameVerilog]) {
+                            if (fs.existsSync(filename)) {
+                                fs.unlinkSync(filename)
+                                console.log(`${getTime()} - compileLola() - delete file: ${filename}`)
+                            }
+                        }
+
+                        console.log(`${getTime()} - compileLola() - compiled = False and read compilation errors`)
+
+                        compiled = false
+
+                        if (stderr) {
+                            console.log(`${getTime()} - compileLola() - Errors found, pushing them to compilationErrors`)
+                            compilationErrors.push(stderr.toString())
+                        } else {
+                            console.log(`${getTime()} - compileLola() - No errors found, something strange happened`)
+                            compilationErrors.push('Compiler failed without giving any Lola errors')
+                            compilationErrors.push('Maybe there is nothing for compiler to compile')
+                            compilationErrors.push('or compiler could not make sense of the code written')
+                        }
+
+                        // kill the child process
+                        child.kill("SIGINT")
+
+                    } else {
+                        // no errors while compiling => meaning code might be bad, but at least it was compiled
+                        let out = stdout.toString()
+                        let err = stderr.toString()
+
+                        // check output of compilation
+                        let linesOfOutput = out.split('\n')
+                        let checkCompilation = true
+
+                        for (const lineOfOutput of linesOfOutput) {
+                            if (lineOfOutput.includes('err:')) {
+                                compilationErrors.push(lineOfOutput)
+                                if (checkCompilation) {
+                                    compiled = false
+                                    checkCompilation = false
+                                }
+                            }
+                            if (lineOfOutput.includes('compilation failed') && checkCompilation) {
+                                compiled = false
+                                checkCompilation = false
+                            }
+                        }
+
+                        // if compiled, get verilog file info
+                        if (compiled) {
+                            console.log(`${getTime()} - compileLola() - reading compiled verilog file: ${filenameVerilog}`)
+                            try {
+                                compiledVerilogCode = fs.readFileSync(filenameVerilog).toString()
+                            } catch (err) {
+                                console.error(`${getTime()} - compileLola() - error while reading verilog file: ${err}`)
+                                compilationErrors.push(`Error while reading verilog file: ${err}`)
+                            }
+                        }
+
+
+                        // delete files
+                        for (const filename of [filenameLola, filenameVerilog]) {
+                            if (fs.existsSync(filename)) {
+                                fs.unlinkSync(filename)
+                                console.log(`${getTime()} - compileLola() - delete file: ${filename}`)
+                            }
+                        }
+
+                        child.kill("SIGINT")
+                    }
+
+                });
+
+            let resultDict = {
+                "compiled": compiled,
+                "compilationErrors": compilationErrors,
+                "compiledVerilogCode": compiledVerilogCode
+            }
+            console.log(`${getTime()} - compileLola() - returning: ${JSON.stringify(resultDict)}`);
+            resolve(resultDict)
+
+        }
+    })
+}
+
+function getTime(separator = " ") {
     let date = new Date();
     let currentDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-    let currentTime = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-    let datetime = currentDate + " " + currentTime
-    return datetime
+    let currentTime = date.getHours() + "-" + date.getMinutes() + "-" + date.getSeconds();
+    return currentDate + separator + currentTime
 }
 
 // This displays message that the server running and listening to specified port
 app.listen(port, '127.0.0.1', () => console.log(`${getTime()} Listening on port ${port}`));
 
-app.post('/compile_lola', (req, res) => {
+app.post('/compile_lola', async (req, res) => {
+    console.log('--- /compile_lola endpoint call START ---')
+    console.log(`${getTime()} Received request with payload: ${JSON.stringify(req.body)}`);
 
-    console.log('------------------- /COMPILE_LOLA endpoint call START -------------------')
+    let resp = {
+        'status': 200,
+        'compiled': false,
+        'compilationErrors': [],
+        'verilogCode': ""
+    }
+
+    // try compiling lola code
+    console.log(`${getTime()} Trying to compile lola code...`);
+    let resultDict = await compileLola(req.body.code)
+    console.log(`${getTime()} returns: ${JSON.stringify(resultDict)}`);
+
+    resp.compiled = resultDict.compiled
+    resp.compilationErrors = resultDict.compilationErrors
+    resp.verilogCode = resultDict.compiledVerilogCode
+
+    console.log('--- /compile_lola endpoint call END ---')
+    res.send(JSON.stringify(resp));
+
+});
+
+app.post('/check_valid_lola', async (req, res) => {
+    console.log('--- /check_valid_lola endpoint call START ---')
     console.log(`${getTime()} Received request with payload: ${req.body}`);
 
     let resp = {
         'status': 200,
-        'compiled': true,
-        'compilationErrors': [],
-        'verilogCode': ''
+        'valid': false,
     }
 
-    // get lola code from blockly
-    let lolaCode = req.body.code
+    // try compiling lola code
+    console.log(`${getTime()} Trying to compile lola code...`);
+    let resultDict = await compileLola(req.body.code)
 
-    // if there is no code, create no file, don't delete anything - just return that no code was found
-    if (lolaCode.length < 1) {
+    resp.valid = resultDict.compiled
 
-        console.log(`${getTime()} No Lola code found => return compiled False`)
+    console.log('--- /check_valid_lola endpoint call END ---')
+    res.send(JSON.stringify(resp));
 
-        resp.compiled = false
-        resp.compilationErrors.push('No code to compile')
-        console.log(`${getTime()} Returning ${JSON.stringify(resp)}`)
-        res.send(JSON.stringify(resp));
-        console.log('------------------- /COMPILE_LOLA endpoint call END -------------------');
-
-    } else {
-
-        // set unique name for files: blockly_yy_mm_dd_HH_MM_SS.Lola
-        let date = new Date();
-        let currentDate = date.getFullYear() + "_" + (date.getMonth() + 1) + "_" + date.getDate();
-        let currentTime = date.getHours() + "_" + date.getMinutes() + "_" + date.getSeconds();
-
-        let datetime = currentDate + "_" + currentTime
-
-        let filenameLola = `compile/blockly_${datetime}.Lola`
-        let filenameVerilog = `compile/blockly_${datetime}.v`
-
-        // call received
-        console.log(`${getTime()} Compile Lola POST call received with body:\n ${JSON.stringify(req.body)}`)
-
-        // create a file with that lola code ,
-        console.log(`${getTime()} Creating file: ${filenameLola}`)
-        fs.writeFileSync(filenameLola, lolaCode)
-
-        // compile that file with Lola executable
-        console.log(`${getTime()} Compiling .Lola file`)
-        let child = subProcess.exec(`../Lola ${filenameLola} ${filenameVerilog}`, {timeout: 4000},
-            (err, stdout, stderr) => {
-                if (err) {
-                    console.error(`${getTime()}: error: ${err}`)
-
-                    // delete files
-                    for (const filename of [filenameLola, filenameVerilog]) {
-                        if (fs.existsSync(filename)) {
-                            fs.unlinkSync(filename)
-                            console.log(`${getTime()} delete file: ${filename}`)
-                        }
-                    }
-
-                    console.log(`${getTime()} Set response.compiled = False and return with compilation errors`)
-
-                    resp.compiled = false
-                    if (stderr) {
-                        resp.compilationErrors.push(stderr.toString())
-                    } else {
-                        resp.compilationErrors.push('Compiler failed without giving any Lola errors')
-                        resp.compilationErrors.push('Maybe there is nothing for compiler to compile')
-                        resp.compilationErrors.push('or compiler could not make sense of the code written')
-                    }
-
-                    child.kill("SIGINT")
-                    console.log('Sending response:', resp, JSON.stringify(resp));
-                    res.send(JSON.stringify(resp));
-                    console.log('------------------- /COMPILE_LOLA endpoint call END -------------------');
-                } else {
-                    let out = stdout.toString()
-                    let err = stderr.toString()
-                    // console.log(err)
-                    // console.log(out)
-
-                    // check output of compilation
-                    let linesOfOutput = out.split('\n')
-                    let checkCompilation = true
-
-                    for (const lineOfOutput of linesOfOutput) {
-                        if (lineOfOutput.includes('err:')) {
-                            resp.compilationErrors.push(lineOfOutput)
-                            if (checkCompilation) {
-                                resp.compiled = false
-                                checkCompilation = false
-                            }
-                        }
-                        if (lineOfOutput.includes('compilation failed') && checkCompilation) {
-                            resp.compiled = false
-                            checkCompilation = false
-                        }
-                    }
-
-                    // if compiled, get verilog file info
-                    if (resp.compiled) {
-                        console.log(`${getTime()} reading compiled verilog file: ${filenameVerilog}`)
-                        resp.verilogCode = fs.readFileSync(filenameVerilog).toString()
-                    }
-
-
-                    // delete files
-                    for (const filename of [filenameLola, filenameVerilog]) {
-                        if (fs.existsSync(filename)) {
-                            fs.unlinkSync(filename)
-                            console.log(`${getTime()} delete file: ${filename}`)
-                        }
-                    }
-
-                    // return response
-                    child.kill("SIGINT")
-                    console.log(`${getTime()} Returning ${JSON.stringify(resp)}`)
-                    res.send(JSON.stringify(resp));
-                    console.log('-------------------');
-                }
-            })
-    }
 });
