@@ -2,14 +2,14 @@ const {createProxyMiddleware} = require('http-proxy-middleware');
 
 module.exports = function (app) {
     app.use(
-        '/compile_lola',
+        '/lola-to-verilog',
         createProxyMiddleware({
             target: 'http://localhost:5000',
             changeOrigin: true,
         }),
     );
     app.use(
-        '/check_valid_lola',
+        '/validate-lola',
         createProxyMiddleware({
             target: 'http://localhost:5000',
             changeOrigin: true,

@@ -8,7 +8,7 @@ import {
 
 import * as lola from './Lola/lola.js';
 import * as examples from './Lola/examples.js';
-import { convertLolaToVerilog, checkLolaCodeValid } from "./Lola/compiler.js"
+import { convertLolaToVerilog, checkLolaCodeValid } from "./Lola/buttonMethods.js"
 import * as blocks from "./Lola/blocks.js"
 
 import {

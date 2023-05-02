@@ -22,7 +22,7 @@ export async function convertLolaToVerilog() {
     const generatedCode = lola.generator.workspaceToCode(Blockly.getMainWorkspace());
 
     try {
-        const response = await fetch('/compile_lola', {
+        const response = await fetch('/lola-to-verilog', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -30,6 +30,8 @@ export async function convertLolaToVerilog() {
             },
             body: JSON.stringify({code: generatedCode})
         });
+        //
+        // if response
 
         const content = await response.json();
 
@@ -56,7 +58,7 @@ export async function checkLolaCodeValid() {
     const generatedCode = lola.generator.workspaceToCode(Blockly.getMainWorkspace());
 
     try {
-        const response = await fetch('/check_valid_lola', {
+        const response = await fetch('/validate-lola', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
