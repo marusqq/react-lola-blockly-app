@@ -19,6 +19,7 @@ async function compileLola(lolaCode) {
             compiled: false,
             compilationErrors: ["No code to compile"],
             compiledVerilogCode: "",
+            emptyCode: true
         };
 
         console.log(`${getTime()} - compileLola() - returning: ${JSON.stringify(resultDict)}`);
@@ -31,6 +32,7 @@ async function compileLola(lolaCode) {
     }
 
     let compiled = true;
+    const emptyCode = false;
     const compilationErrors = [];
     let compiledVerilogCode = "";
 
@@ -89,6 +91,7 @@ async function compileLola(lolaCode) {
         compiled,
         compilationErrors,
         compiledVerilogCode,
+        emptyCode
     };
 
     console.log(`${getTime()} - compileLola() - returning: ${JSON.stringify(resultDict)}`);
@@ -127,6 +130,7 @@ app.post('/validate-lola', async (req, res) => {
         console.log(`${getTime()} compileLolaDict: ${JSON.stringify(compiledDict)}`);
         resp.valid = compiledDict.compiled
         resp.compilationErrors = compiledDict.compilationErrors
+        resp.emptyCode = compiledDict.emptyCode
         console.log(`${getTime()} response: ${JSON.stringify(resp)}`);
         console.log('--- /check_valid_lola endpoint call END ---')
         res.send(JSON.stringify(resp));
