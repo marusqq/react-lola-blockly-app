@@ -159,6 +159,7 @@ app.post('/lola-to-verilog', async (req, res) => {
         resp.compiled = compiledDict.compiled
         resp.compilationErrors = compiledDict.compilationErrors
         resp.verilogCode = compiledDict.compiledVerilogCode
+        resp.emptyCode = compiledDict.emptyCode
         console.log(`${getTime()} returning response: ${JSON.stringify(resp)}`);
         console.log('--- /compile_lola endpoint call END ---')
         res.send(JSON.stringify(resp));

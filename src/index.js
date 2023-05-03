@@ -8,7 +8,15 @@ import {
 
 import * as lola from './Lola/lola.js';
 import * as examples from './Lola/examples.js';
-import {convertLolaToVerilog, checkLolaCodeValid} from "./Lola/buttonMethods.js"
+import {
+    convertLolaToVerilog,
+    checkLolaCodeValid,
+    convertLolaToPython,
+    convertLolaToC,
+    convertLolaToGo,
+    convertLolaToLogisim,
+    simulateLolaCode
+} from "./Lola/buttonMethods.js"
 import {egg100, egg75, egg50, egg25, egg10} from "./eggs"
 import * as blocks from "./Lola/blocks.js"
 
@@ -167,8 +175,20 @@ function configurePlayground(playground) {
     // add Lola folders
     // /Lola/
     let lolaFolder = gui.addFolder('Lola')
-    lolaFolder.add({"Validate Lola code": checkLolaCodeValid}, "Validate Lola code").onChange();
-    lolaFolder.add({"Convert Lola to Verilog": convertLolaToVerilog}, "Convert Lola to Verilog").onChange();
+
+    lolaFolder.add({"Validate": checkLolaCodeValid}, "Validate").onChange();
+    lolaFolder.add({"Simulate": simulateLolaCode}, "Simulate").onChange();
+
+
+    // /Lola/Exports
+    let convertFolder = lolaFolder.addFolder('Convert')
+
+    // add lola exports
+    convertFolder.add({"To Verilog": convertLolaToVerilog}, "To Verilog").onChange();
+    convertFolder.add({"To Python": convertLolaToPython}, "To Python").onChange();
+    convertFolder.add({"To C": convertLolaToC}, "To C").onChange();
+    convertFolder.add({"To Go": convertLolaToGo}, "To Go").onChange();
+    convertFolder.add({"To Logisim": convertLolaToLogisim}, "To Logisim").onChange();
 
     // /Lola/Examples
     let examplesFolder = lolaFolder.addFolder('Examples')
@@ -197,8 +217,8 @@ function configurePlayground(playground) {
 
 
     // ADD XML options
-    gui.add({"Download as XML": examples.downloadAsXml}, "Download as XML").onChange();
-    gui.add({"Import XML": examples.importXml}, "Import XML").onChange();
+    gui.add({"Export workspace as XML": examples.downloadAsXml}, "Export workspace as XML").onChange();
+    gui.add({"Import workspace as XML": examples.importXml}, "Import workspace as XML").onChange();
 }
 
 createPlayground(
