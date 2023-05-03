@@ -84,8 +84,13 @@ async function compileLola(lolaCode) {
 
     console.log(`${getTime()} - compileLola() - delete files: ${filenameLola}, ${filenameVerilog}`);
 
-    fs.unlinkSync(filenameLola);
-    fs.unlinkSync(filenameVerilog);
+    // delete files
+    if (fs.existsSync(filenameLola)) {
+        fs.unlinkSync(filenameLola);
+    }
+    if (fs.existsSync(filenameVerilog)) {
+        fs.unlinkSync(filenameVerilog);
+    }
 
     const resultDict = {
         compiled,

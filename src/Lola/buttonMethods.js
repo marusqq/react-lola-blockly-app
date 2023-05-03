@@ -2,6 +2,8 @@ import * as lola from './lola.js';
 import Blockly from 'blockly';
 import toastr from 'toastr';
 
+export let validLolaGeneratedCode = false
+export let lastValidLolaGeneratedCode = ''
 
 export function toggleValidCodeMethods(on) {
 
@@ -17,6 +19,12 @@ export function toggleValidCodeMethods(on) {
     VALID_CODE_FUNCTIONS.forEach(validCodeFunction => {
         toggleFunction(validCodeFunction, on)
     })
+
+    // save global variable if code is valid right now
+    validLolaGeneratedCode = on
+
+    // save last valid code, if code was invalidated => set 'none'
+    lastValidLolaGeneratedCode = on ? lola.generator.workspaceToCode(Blockly.getMainWorkspace()) : 'none';
 }
 
 // toggleFunction('Simulate', false)
@@ -70,19 +78,19 @@ function convertNewlinesToBr(str) {
     return str.replace(/\n/g, '<br>');
 }
 
-function toastSuccess(message, options = {}) {
+export function toastSuccess(message, options = {}) {
     toastr.success(convertNewlinesToBr(message), '', {...GLOBAL_TOASTR_SETTINGS, ...options});
 }
 
-function toastError(message, options = {}) {
+export function toastError(message, options = {}) {
     toastr.error(convertNewlinesToBr(message), '', {...GLOBAL_TOASTR_SETTINGS, ...options});
 }
 
-function toastWarning(message, options = {}) {
+export function toastWarning(message, options = {}) {
     toastr.warning(convertNewlinesToBr(message), '', {...GLOBAL_TOASTR_SETTINGS, ...options});
 }
 
-function toastInfo(message, options = {}) {
+export function toastInfo(message, options = {}) {
     toastr.info(convertNewlinesToBr(message), '', {...GLOBAL_TOASTR_SETTINGS, ...options});
 }
 
@@ -120,7 +128,7 @@ export async function checkLolaCodeValid() {
 
         if (content.valid) {
             toggleValidCodeMethods(true)
-            toastSuccess(`Exporting & Simulating are now available`);
+            toastSuccess(`Simulating & Converting Lola code is now available`);
             toastSuccess(`Lola code is valid.`)
 
         } else if (content.emptyCode) {
@@ -143,7 +151,7 @@ export async function checkLolaCodeValid() {
 }
 
 export async function convertLolaToVerilog() {
-    
+
     const generatedCode = lola.generator.workspaceToCode(Blockly.getMainWorkspace());
 
     try {

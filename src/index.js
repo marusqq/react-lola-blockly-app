@@ -16,7 +16,10 @@ import {
     convertLolaToGo,
     convertLolaToLogisim,
     simulateLolaCode,
-    toggleValidCodeMethods
+    toggleValidCodeMethods,
+    validLolaGeneratedCode,
+    toastWarning,
+    lastValidLolaGeneratedCode
 } from "./Lola/buttonMethods.js"
 import {egg100, egg75, egg50, egg25, egg10} from "./eggs"
 import * as blocks from "./Lola/blocks.js"
@@ -225,6 +228,53 @@ function createWorkspace(blocklyDiv, options) {
 
     workspace.registerButtonCallback('createVariableButton', function (button) {
         Blockly.Variables.createVariableButtonHandler(button.getTargetWorkspace(), null, '');
+    });
+
+    const EVENTS_WITH_NO_CODE_CHANGE = [
+        // opening toolbox does not change anything
+        Blockly.Events.TOOLBOX_ITEM_SELECT,
+
+        // comments obviously does not change code
+        Blockly.Events.COMMENT_CHANGE,
+        Blockly.Events.COMMENT_CREATE,
+        Blockly.Events.COMMENT_MOVE,
+        Blockly.Events.COMMENT_DELETE,
+
+        // loading also doesn't change code
+        Blockly.Events.FINISHED_LOADING,
+
+        // clicking & selecting shouldn't change code
+        Blockly.Events.CLICK,
+        Blockly.Events.SELECTED,
+
+        // opening trashcan doesn't change
+        Blockly.Events.TRASHCAN_OPEN,
+
+        // changing viewport or theme will not change the code also
+        Blockly.Events.THEME_CHANGE,
+        Blockly.Events.VIEWPORT_CHANGE
+
+    ]
+
+    // add listener for block or code change if code is considered valid
+    workspace.addChangeListener(function (event) {
+        // if event that could actually change the code
+        if (!EVENTS_WITH_NO_CODE_CHANGE.includes(event.type)) {
+
+            // if code is valid
+            if(validLolaGeneratedCode) {
+
+                // and current code != last valid code
+                if (lastValidLolaGeneratedCode !== lola.generator.workspaceToCode(Blockly.getMainWorkspace())) {
+
+                    // warn the user and set valid code to false
+                    toastWarning("Previously validated code has been changed. " +
+                        "New validation will be needed for code simulating & exporting ")
+                    toggleValidCodeMethods(false)
+
+                }
+            }
+        }
     });
 
     return workspace;
