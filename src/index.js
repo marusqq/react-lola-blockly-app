@@ -15,7 +15,8 @@ import {
     convertLolaToC,
     convertLolaToGo,
     convertLolaToLogisim,
-    simulateLolaCode
+    simulateLolaCode,
+    toggleValidCodeMethods
 } from "./Lola/buttonMethods.js"
 import {egg100, egg75, egg50, egg25, egg10} from "./eggs"
 import * as blocks from "./Lola/blocks.js"
@@ -155,24 +156,7 @@ function configurePlayground(playground) {
         }
     });
 
-
-    // Rendering - decided not to add right now
-    // let renderingFolder = gui.addFolder('Rendering');
-    // let renderingOptions = {'Font size': 10};
-    //
-    // // add rendering function
-    // renderingFolder.add(renderingOptions, 'Font size', 0, 50)
-    //     .onChange(function (value) {
-    //         let ws = playground.getWorkspace();
-    //         let fontStyle = {
-    //             'size': value
-    //         };
-    //         ws.getTheme().setFontStyle(fontStyle);
-    //         // Refresh theme.
-    //         ws.setTheme(ws.getTheme(''));
-    //     });
-
-    // add Lola folders
+    // add needed folders / functions
     // /Lola/
     let lolaFolder = gui.addFolder('Lola')
 
@@ -181,7 +165,7 @@ function configurePlayground(playground) {
 
 
     // /Lola/Exports
-    let convertFolder = lolaFolder.addFolder('Convert')
+    let convertFolder = lolaFolder.addFolder('Convert Lola')
 
     // add lola exports
     convertFolder.add({"To Verilog": convertLolaToVerilog}, "To Verilog").onChange();
@@ -219,6 +203,9 @@ function configurePlayground(playground) {
     // ADD XML options
     gui.add({"Export workspace as XML": examples.downloadAsXml}, "Export workspace as XML").onChange();
     gui.add({"Import workspace as XML": examples.importXml}, "Import workspace as XML").onChange();
+
+    // since the code was not validated, hide folders / functions
+    toggleValidCodeMethods(false)
 }
 
 createPlayground(

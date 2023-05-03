@@ -2,6 +2,53 @@ import * as lola from './lola.js';
 import Blockly from 'blockly';
 import toastr from 'toastr';
 
+
+export function toggleValidCodeMethods(on) {
+
+    const VALID_CODE_FUNCTIONS = ['Simulate']
+    const VALID_CODE_FOLDERS = ['Convert Lola']
+
+    // remove or add valid code folders
+    VALID_CODE_FOLDERS.forEach(validCodeFolder => {
+        toggleFolder(validCodeFolder, on)
+    })
+
+    // remove or add valid code functions
+    VALID_CODE_FUNCTIONS.forEach(validCodeFunction => {
+        toggleFunction(validCodeFunction, on)
+    })
+}
+
+// toggleFunction('Simulate', false)
+function toggleFunction(functionName, on) {
+    const functionElements = document.querySelectorAll('li.cr.function');
+    for (let i = 0; i < functionElements.length; i++) {
+        const functionElement = functionElements[i];
+        const functionNameElement = functionElement.querySelector('div span.property-name');
+        const name = functionNameElement.textContent.trim();
+
+        if (name === functionName) {
+            functionElement.style.display = on ? 'list-item' : 'none';
+            break;
+        }
+    }
+}
+
+// toggleFolder('Lola', false)
+function toggleFolder(folderName, on) {
+    const folderElements = document.querySelectorAll('li.folder');
+    for (let i = 0; i < folderElements.length; i++) {
+        const folderElement = folderElements[i];
+        const titleElement = folderElement.querySelector('div.dg ul li.title');
+        const title = titleElement.textContent.trim();
+
+        if (title === folderName) {
+            folderElement.style.display = on ? 'list-item' : 'none';
+            break;
+        }
+    }
+}
+
 const GLOBAL_TOASTR_SETTINGS = {
     positionClass: 'toast-bottom-right',
     preventDuplicates: false,
@@ -72,26 +119,31 @@ export async function checkLolaCodeValid() {
         const content = await response.json();
 
         if (content.valid) {
-            toastSuccess(`Lola code is valid.`);
+            toggleValidCodeMethods(true)
+            toastSuccess(`Exporting & Simulating are now available`);
+            toastSuccess(`Lola code is valid.`)
 
         } else if (content.emptyCode) {
+
             let message = `Validation failed.\nErrors:\n - ${content.compilationErrors.join('\n -')}`
+            toggleValidCodeMethods(false)
             toastInfo(message);
 
         } else {
             let message = `Validation failed.\nErrors:\n - ${content.compilationErrors.join('\n -')}`
+            toggleValidCodeMethods(false)
             toastWarning(message, ONLY_CLOSABLE_TOASTR_SETTINGS);
         }
 
     } catch (error) {
         console.error(error);
+        toggleValidCodeMethods(false)
         toastError('An error occurred while processing your request. Please try again later.');
     }
 }
 
 export async function convertLolaToVerilog() {
-
-    // get generated code
+    
     const generatedCode = lola.generator.workspaceToCode(Blockly.getMainWorkspace());
 
     try {
