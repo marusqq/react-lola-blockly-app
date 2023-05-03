@@ -8,7 +8,8 @@ import {
 
 import * as lola from './Lola/lola.js';
 import * as examples from './Lola/examples.js';
-import { convertLolaToVerilog, checkLolaCodeValid } from "./Lola/buttonMethods.js"
+import {convertLolaToVerilog, checkLolaCodeValid} from "./Lola/buttonMethods.js"
+import {egg100, egg75, egg50, egg25, egg10} from "./eggs"
 import * as blocks from "./Lola/blocks.js"
 
 import {
@@ -112,6 +113,41 @@ function configurePlayground(playground) {
         actionsFolder.removeFolder(folderToRemove)
     }
 
+    let fPresses = 0;
+    let countingFPresses = true;
+    const actions = {
+        10: () => console.log(egg10),
+        15: "clear",
+        25: () => console.log(egg25),
+        30: "clear",
+        50: () => console.log(egg50),
+        60: "clear",
+        75: () => console.log(egg75),
+        85: "clear",
+        100: () => console.log(egg100),
+        110: "clear",
+        111: "stop"
+    }
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key.toLowerCase() === "f" && countingFPresses === true) {
+            fPresses++;
+            if (actions.hasOwnProperty(fPresses)) {
+                const action = actions[fPresses];
+                if (typeof action === "function") {
+                    action();
+                } else if (action === "clear") {
+                    console.clear();
+                } else if (action === "stop") {
+                    countingFPresses = false;
+                }
+            }
+        } else {
+            fPresses = 0;
+        }
+    });
+
+
     // Rendering - decided not to add right now
     // let renderingFolder = gui.addFolder('Rendering');
     // let renderingOptions = {'Font size': 10};
@@ -158,7 +194,6 @@ function configurePlayground(playground) {
 
     wirthSmallPrograms.add({"Counter.Lola": examples.counterExample}, "Counter.Lola").onChange();
     wirthSmallPrograms.add({"Shifter.Lola": examples.shifterExample}, "Shifter.Lola").onChange();
-
 
 
     // ADD XML options
