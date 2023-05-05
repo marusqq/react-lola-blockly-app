@@ -135,40 +135,6 @@ export function alertGetUserInputBool(label="choose", confirmButtonText="yes", c
     });
 }
 
-function apiChatGptPrompt(prompt) {
-    const url = "https://api.openai.com/v1/chat/completions";
-    const headers = {
-        "Authorization": `Bearer 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`,
-        "Content-Type": "application/json"
-    };
-    const data = {
-        "model": "gpt-3.5-turbo",
-        "messages": [{"role": "user", "content": prompt}]
-    };
-    return fetch(url, {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify(data)
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(response.statusText)
-            }
-            return response.json()
-        })
-        .then(data => {
-            const message = data['choices'][0]['message'];
-            const messageContent = message['content'].trim();
-            return [true, messageContent];
-        })
-        .catch(error => {
-            if (error.message === "429") {
-                return [false, "429"];
-            }
-            return [false, ""];
-        });
-}
-
 export function toastSuccess(message, options = {}) {
     toastr.success(_convertNewlinesToBr(message), '', {...GLOBAL_TOASTR_SETTINGS, ...options});
 }
