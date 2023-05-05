@@ -249,35 +249,54 @@ export function sendXmlToWorkspace(xml, addXml, filename) {
         return
     }
 
-    Swal.fire({
-        title: "Workspace XML import",
-        text: "Importing new workspace will discard current one.\n" +
-            "Do you want to export current workspace as XML?",
-        showDenyButton: true,
-        showCancelButton: true,
-        confirmButtonText: "Save",
-        denyButtonText: "Discard",
-        cancelButtonText: "Cancel"
-    }).then((result) => {
-        if (result.isConfirmed || result.isDenied) {
+    const workspaceDom = Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())
+    const workspacePrettyXml = Blockly.Xml.domToPrettyText(workspaceDom)
 
-            // save current workspace as XML
-            if (result.isConfirmed) {
-                exportXml()
+    const tagRegex = /<\/?xml[^>]*>/gm;
+    const workspaceWithoutXMLTags = workspacePrettyXml.replace(tagRegex, '');
+
+
+    // if empty current workspace, just instantly import
+    if (workspaceWithoutXMLTags.trim().length === 0) {
+        // clear variables
+        Blockly.getMainWorkspace().clear()
+
+        // write xml to workspace
+        Blockly.Xml.domToWorkspace(dom, Blockly.getMainWorkspace());
+        toastSuccess(`Workspace ${filename} imported successfully`)
+
+    } else {
+
+        Swal.fire({
+            title: "Workspace XML import",
+            text: "Importing new workspace will discard current one.\n" +
+                "Do you want to export current workspace as XML?",
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: "Save",
+            denyButtonText: "Discard",
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.isConfirmed || result.isDenied) {
+
+                // save current workspace as XML
+                if (result.isConfirmed) {
+                    exportXml()
+                }
+
+                // clear variables
+                Blockly.getMainWorkspace().clear()
+
+                // write xml to workspace
+                Blockly.Xml.domToWorkspace(dom, Blockly.getMainWorkspace());
+                toastSuccess(`Workspace ${filename} imported successfully`)
+
+
+            } else {
+                toastInfo("Workspace XML import cancelled")
             }
-
-            // clear variables
-            Blockly.getMainWorkspace().clear()
-
-            // write xml to workspace
-            Blockly.Xml.domToWorkspace(dom, Blockly.getMainWorkspace());
-            toastSuccess(`Workspace ${filename} imported successfully`)
-
-
-        } else {
-            toastInfo("Workspace XML import cancelled")
-        }
-    })
+        })
+    }
 }
 
 export function importXml() {
