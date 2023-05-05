@@ -15,5 +15,12 @@ module.exports = function (app) {
             changeOrigin: true,
         }),
     );
+    app.use(
+        '/ask-chat-gpt-lola',
+        createProxyMiddleware({
+            target: 'http://localhost:5000',
+            changeOrigin: true,
+        }),
+    );
 };
 

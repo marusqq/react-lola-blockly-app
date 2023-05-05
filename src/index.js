@@ -17,24 +17,19 @@ import {
     convertLolaToLogisim,
     simulateLolaCode,
     toggleValidCodeMethods,
+    toggleInvalidCodeMethods,
     validLolaGeneratedCode,
-    toastWarning,
-    lastValidLolaGeneratedCode
-} from "./Lola/buttonMethods.js"
+    lastValidLolaGeneratedCode,
+    invalidLolaGeneratedCode,
+    lastInvalidLolaGeneratedCode,
+    exportXml,
+    importXml,
+    consultChatGPT,
+    testingDebug,
+} from "./buttonMethods.js"
+import {toastWarning} from "./userAlerts"
 import {egg100, egg75, egg50, egg25, egg10} from "./eggs"
 import * as blocks from "./Lola/blocks.js"
-
-import {
-    dividerExample,
-    fpaAdderExample,
-    fpDividerExample,
-    fpMultiplierExample,
-    leftShifterExample,
-    multiplierExample,
-    rightShifterExample,
-    riscExample
-} from "./Lola/examples.js";
-
 
 function configureContextMenu(menuOptions, e) {
     let workspace = this;
@@ -102,7 +97,6 @@ function configurePlayground(playground) {
 
     // add lola generator
     playground.addGenerator('Lola', lola.generator);
-
     // Folders in playground
     // ------------------------------------------------------------
     let gui = playground.getGUI();
@@ -163,8 +157,9 @@ function configurePlayground(playground) {
     // /Lola/
     let lolaFolder = gui.addFolder('Lola')
 
-    lolaFolder.add({"Validate": checkLolaCodeValid}, "Validate").onChange();
     lolaFolder.add({"Simulate": simulateLolaCode}, "Simulate").onChange();
+    lolaFolder.add({"Validate": checkLolaCodeValid}, "Validate").onChange();
+    lolaFolder.add({"Ask ChatGPT about errors": consultChatGPT}, "Ask ChatGPT about errors").onChange();
 
 
     // /Lola/Exports
@@ -204,11 +199,17 @@ function configurePlayground(playground) {
 
 
     // ADD XML options
-    gui.add({"Export workspace as XML": examples.downloadAsXml}, "Export workspace as XML").onChange();
-    gui.add({"Import workspace as XML": examples.importXml}, "Import workspace as XML").onChange();
+    gui.add({"Export workspace as XML": exportXml}, "Export workspace as XML").onChange();
+    gui.add({"Import workspace as XML": importXml}, "Import workspace as XML").onChange();
+
+    // add debug
+    gui.add({"Debug": testingDebug}, "Debug").onChange();
 
     // since the code was not validated, hide folders / functions
     toggleValidCodeMethods(false)
+
+    // since there is no code, the code is not invalid
+    toggleInvalidCodeMethods(false)
 }
 
 createPlayground(
@@ -229,6 +230,12 @@ function createWorkspace(blocklyDiv, options) {
     workspace.registerButtonCallback('createVariableButton', function (button) {
         Blockly.Variables.createVariableButtonHandler(button.getTargetWorkspace(), null, '');
     });
+
+    let lolaGeneratorPressed = false;
+    const EVENTS_TO_PRESS_LOLA_GENERATOR = [
+        Blockly.Events.TOOLBOX_ITEM_SELECT,
+        Blockly.Events.BLOCK_CREATE
+    ]
 
     const EVENTS_WITH_NO_CODE_CHANGE = [
         // opening toolbox does not change anything
@@ -253,16 +260,28 @@ function createWorkspace(blocklyDiv, options) {
         // changing viewport or theme will not change the code also
         Blockly.Events.THEME_CHANGE,
         Blockly.Events.VIEWPORT_CHANGE
-
     ]
 
-    // add listener for block or code change if code is considered valid
+    // add listener:
+    // -- for pressing Lola generator on first load
+    // -- for block or code change if code is considered valid
     workspace.addChangeListener(function (event) {
-        // if event that could actually change the code
+
+        // -- for pressing Lola generator on first load
+        if (EVENTS_TO_PRESS_LOLA_GENERATOR.includes(event.type) && !lolaGeneratorPressed) {
+            const lolaTab = document.querySelector('[data-tab="Lola"]');
+            if (lolaTab) {
+                lolaTab.click();
+                lolaGeneratorPressed = true;
+            }
+        }
+
+        // -- for block or code change if code is considered valid
+        // if event happens that could actually change the code
         if (!EVENTS_WITH_NO_CODE_CHANGE.includes(event.type)) {
 
             // if code is valid
-            if(validLolaGeneratedCode) {
+            if (validLolaGeneratedCode) {
 
                 // and current code != last valid code
                 if (lastValidLolaGeneratedCode !== lola.generator.workspaceToCode(Blockly.getMainWorkspace())) {
@@ -274,8 +293,39 @@ function createWorkspace(blocklyDiv, options) {
 
                 }
             }
+
+            // if the code is invalid
+            if(invalidLolaGeneratedCode) {
+                // and current code != last invalid code
+                if (lastInvalidLolaGeneratedCode !== lola.generator.workspaceToCode(Blockly.getMainWorkspace())) {
+
+                    // don't warn the user here
+                    // toastWarning("Previously validated code has been changed. " +
+                    //     "New validation will be needed for code simulating & exporting ")
+                    toggleInvalidCodeMethods(false)
+
+                }
+            }
         }
     });
+
+    // const observer = new MutationObserver(function(mutations) {
+    //     console.log('hihi')
+    //     mutations.forEach(function(mutation) {
+    //         if (mutation.type === 'childList' && mutation.addedNodes.length) {
+    //             const lolaTab = document.querySelector('[data-tab="Lola"]');
+    //             console.log('childlist for each')
+    //             if (lolaTab) {
+    //                 console.log(lolaTab)
+    //                 lolaTab.click();
+    //                 observer.disconnect(); // Stop watching for changes once element is clicked
+    //             }
+    //         }
+    //     });
+    // });
+    //
+    // observer.observe(document.body, { childList: true, subtree: false });
+
 
     return workspace;
 }

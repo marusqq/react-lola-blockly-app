@@ -4,6 +4,7 @@ const util = require('util');
 const childProcess = require('child_process');
 const exec = util.promisify(childProcess.exec);
 const bodyParser = require('body-parser')
+require('dotenv').config();
 
 const app = express();
 const port = 5000;
@@ -172,6 +173,65 @@ app.post('/lola-to-verilog', async (req, res) => {
         console.error(err);
     })
 
+});
+
+// endpoint to ask ChatGPT
+app.post('/ask-chat-gpt-lola', async (req, res) => {
+    console.log('--- /ask-chat-gpt-lola endpoint call START ---');
+
+    let resp = {
+        'status': 200,
+        'response': ''
+    }
+
+    // get the prompt from the query parameters
+    const lolaCode = req.body.lolaCode;
+    console.log(`lolaCode: ${lolaCode}`)
+
+    const errors = req.body.lolaErrors;
+    console.log(`errors: ${errors}`)
+
+    if (!lolaCode || !errors) {
+        resp.status = 400;
+        resp.response = "Bad request"
+        res.send(JSON.stringify(resp));
+    }
+
+    const prompt = `Explain why this LOLA HDL code fails with: \n${errors}. \nCode:\n ${lolaCode}`
+
+    // set up the API request data
+    const data = {
+        "model": "gpt-3.5-turbo",
+        "messages": [{"role": "user", "content": prompt}]
+    };
+
+    // set up the API request headers, including the API key from the .env file
+    const headers = {
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+        "Content-Type": "application/json"
+    };
+
+    try {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(data)
+        });
+
+        const responseData = await response.json();
+        const answer = responseData['choices'][0]['message']['content'].trim();
+        console.log(`chatgpt answer: ${answer}`)
+        resp.response = answer
+        res.send(JSON.stringify(resp));
+
+    } catch (error) {
+        console.error(error);
+        resp.status = 500;
+        resp.response = "Internal server error";
+        res.send(JSON.stringify(resp));
+    }
+
+    console.log('--- /ask-chat-gpt-lola endpoint call END ---');
 });
 
 
