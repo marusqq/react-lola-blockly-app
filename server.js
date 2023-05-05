@@ -219,7 +219,7 @@ app.post('/ask-chat-gpt-lola', async (req, res) => {
         });
 
         const responseData = await response.json();
-        console.log(`response: ${responseData}`)
+        console.log(`response: ${JSON.stringify(responseData)}`)
         const answer = responseData['choices'][0]['message']['content'].trim();
         console.log(`chatgpt answer: ${answer}`)
         resp.response = answer
