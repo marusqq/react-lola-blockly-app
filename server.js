@@ -1,9 +1,3 @@
-let fetch;
-try {
-    fetch = import('node-fetch');
-} catch (err) {
-    console.error('Failed to import node-fetch:', err);
-}
 const express = require('express');
 const fs = require('fs')
 const util = require('util');
@@ -226,10 +220,17 @@ app.post('/ask-chat-gpt-lola', async (req, res) => {
 
         const responseData = await response.json();
         console.log(`response: ${JSON.stringify(responseData)}`)
-        const answer = responseData['choices'][0]['message']['content'].trim();
-        console.log(`chatgpt answer: ${answer}`)
-        resp.response = answer
-        res.send(JSON.stringify(resp));
+        try {
+            const answer = responseData['choices'][0]['message']['content'].trim();
+            console.log(`chatgpt answer: ${answer}`)
+            resp.response = answer
+            res.send(JSON.stringify(resp));
+        } catch (error) {
+            console.log(responseData['error']['message'])
+            resp.response = responseData['error']['message']
+            res.send(JSON.stringify(resp));
+        }
+
 
     } catch (error) {
         console.error(error);
