@@ -405,6 +405,11 @@ function generateLolaGenerator() {
     return generator
 }
 
+export function getModuleNameLolaCode(lolaCode) {
+    const moduleRegex = /MODULE\s+([^\s(]+)\s*\(/;
+    const match = lolaCode.match(moduleRegex);
+    return match ? match[1] : null;
+}
 
 export const toolbox = `
   <xml id="toolbox">

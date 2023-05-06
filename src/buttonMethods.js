@@ -1,6 +1,7 @@
 import * as lola from './Lola/lola.js';
 import Blockly from 'blockly/core';
 import Swal from 'sweetalert2';
+
 import {
     ONLY_CLOSABLE_TOASTR_SETTINGS,
     toastError,
@@ -140,6 +141,7 @@ export async function checkLolaCodeValid() {
 export async function convertLolaToVerilog() {
 
     const generatedCode = lola.generator.workspaceToCode(Blockly.getMainWorkspace());
+    const moduleName = lola.getModuleNameLolaCode(generatedCode)
 
     try {
         const response = await fetch('/lola-to-verilog', {
@@ -154,8 +156,8 @@ export async function convertLolaToVerilog() {
         const content = await response.json();
 
         if (content.compiled) {
-            toastSuccess("Downloading Verilog")
-            save('verilog.v', content.verilogCode);
+            toastSuccess(`Downloading ${moduleName} in Verilog`)
+            save(`${moduleName}.v`, content.verilogCode);
 
         } else if (content.emptyCode) {
             let message = `Converting to Verilog failed.\nErrors:\n - ${content.compilationErrors.join('\n -')}`
@@ -171,29 +173,81 @@ export async function convertLolaToVerilog() {
     }
 }
 
-export async function convertLolaToPython() {
-    console.log('convert -> Python')
-    toastInfo("not implemented yet")
+export async function convertLolaToVHDL() {
+    const generatedCode = lola.generator.workspaceToCode(Blockly.getMainWorkspace());
+    const moduleName = lola.getModuleNameLolaCode(generatedCode)
+
+    try {
+        const response = await fetch('/lola-to-vhdl', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({code: generatedCode})
+        });
+
+        const content = await response.json();
+
+        if (content.converted) {
+            toastSuccess(`Downloading ${moduleName} in VHDL`)
+            save(`${moduleName}.vhdl`, content.code);
+
+        } else {
+            let message = `Converting ${moduleName} to VHDL failed.\nErrors:\n - ${content.conversionErrors.join('\n -')}`
+            toastWarning(message, ONLY_CLOSABLE_TOASTR_SETTINGS);
+        }
+    } catch (error) {
+        console.error(error);
+        toastError('An error occurred while processing your request. Please try again later.');
+    }
 }
 
 export async function convertLolaToC() {
-    console.log('convert -> C')
+    const generatedCode = lola.generator.workspaceToCode(Blockly.getMainWorkspace());
+    const moduleName = lola.getModuleNameLolaCode(generatedCode)
+
+    try {
+        const response = await fetch('/lola-to-c', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({code: generatedCode, moduleName: moduleName})
+        });
+
+        const content = await response.json();
+
+        if (content.converted) {
+            toastSuccess(`Downloading ${moduleName} in C`)
+            save(`${moduleName}.c`, content.code);
+
+        } else {
+            let message = `Converting to ${moduleName} C failed.\nErrors:\n - ${content.conversionErrors.join('\n -')}`
+            toastWarning(message, ONLY_CLOSABLE_TOASTR_SETTINGS);
+        }
+    } catch (error) {
+        console.error(error);
+        toastError('An error occurred while processing your request. Please try again later.');
+    }
+}
+
+export async function convertLolaToPython() {
     toastInfo("not implemented yet")
 }
 
+
 export async function convertLolaToGo() {
-    console.log('convert -> Go')
     toastInfo("not implemented yet")
 }
 
 export async function convertLolaToLogisim() {
-    console.log('convert -> Logisim')
     toastInfo("not implemented yet")
 }
 
 export async function simulateLolaCode() {
-    console.log('simulate hihihi')
-    toastInfo("not implemented yet")
+    toastInfo("being developed")
 }
 
 export async function consultChatGPT() {

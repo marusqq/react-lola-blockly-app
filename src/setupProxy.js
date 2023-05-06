@@ -9,6 +9,20 @@ module.exports = function (app) {
         }),
     );
     app.use(
+        '/lola-to-c',
+        createProxyMiddleware({
+            target: 'http://localhost:5000',
+            changeOrigin: true,
+        }),
+    );
+    app.use(
+        '/lola-to-vhdl',
+        createProxyMiddleware({
+            target: 'http://localhost:5000',
+            changeOrigin: true,
+        }),
+    );
+    app.use(
         '/validate-lola',
         createProxyMiddleware({
             target: 'http://localhost:5000',

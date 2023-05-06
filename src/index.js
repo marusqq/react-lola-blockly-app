@@ -15,6 +15,7 @@ import {
     convertLolaToC,
     convertLolaToGo,
     convertLolaToLogisim,
+    convertLolaToVHDL,
     simulateLolaCode,
     toggleValidCodeMethods,
     toggleInvalidCodeMethods,
@@ -167,13 +168,21 @@ function configurePlayground(playground) {
 
     // add lola exports
     convertFolder.add({"To Verilog": convertLolaToVerilog}, "To Verilog").onChange();
+    convertFolder.add({"To VHDL": convertLolaToVHDL}, "To VHDL").onChange();
+    convertFolder.add({"To C (experimental)": convertLolaToC}, "To C (experimental)").onChange();
+
+    // not implemented
     convertFolder.add({"To Python": convertLolaToPython}, "To Python").onChange();
-    convertFolder.add({"To C": convertLolaToC}, "To C").onChange();
     convertFolder.add({"To Go": convertLolaToGo}, "To Go").onChange();
     convertFolder.add({"To Logisim": convertLolaToLogisim}, "To Logisim").onChange();
 
     // /Lola/Examples
     let examplesFolder = lolaFolder.addFolder('Examples')
+
+    // /Lola/Examples/Basic
+    let basicExamplesFolder = examplesFolder.addFolder('Basic Examples')
+
+    basicExamplesFolder.add({"Adder.Lola": examples.adderBasic}, "Adder.Lola").onChange();
 
     // /Lola/Examples/Wirth RISCV
     let wirthRiscFolder = examplesFolder.addFolder('Wirth RISC5')
