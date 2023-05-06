@@ -200,7 +200,7 @@ export async function consultChatGPT() {
 
     // get generated code
     const generatedCode = lola.generator.workspaceToCode(Blockly.getMainWorkspace());
-    toastInfo("Question sent to chatGPT. Waiting for answer...")
+    toastInfo("Question sent to ChatGPT. Waiting for answer...")
     try {
         const response = await fetch('/ask-chat-gpt-lola', {
             method: 'POST',
@@ -217,6 +217,7 @@ export async function consultChatGPT() {
             await Swal.fire({
                 title: 'ChatGPT:',
                 icon: "info",
+                position: "top-right",
                 text: content.response
             })
 
@@ -224,6 +225,7 @@ export async function consultChatGPT() {
             await Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
+                position: "top-right",
                 text: content.response
             })
         }
