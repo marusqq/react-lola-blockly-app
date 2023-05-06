@@ -12,6 +12,13 @@ const port = 5000;
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded());     // to support URL-encoded bodies
 
+function getTime(separator = " ") {
+    let date = new Date();
+    let currentDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+    let currentTime = date.getHours() + "-" + date.getMinutes() + "-" + date.getSeconds();
+    return currentDate + separator + currentTime
+}
+
 async function compileLola(lolaCode) {
     if (lolaCode.length === 0) {
         console.log(`${getTime()} - compileLola() - No Lola code found, compiled = False`);
@@ -46,7 +53,7 @@ async function compileLola(lolaCode) {
 
         console.log(`${getTime()} - compileLola() - Compiling .Lola file with subProcess`);
 
-        const { stdout, stderr } = await exec(`../Lola ${filenameLola} ${filenameVerilog}`, {
+        const {stdout, stderr} = await exec(`../Lola ${filenameLola} ${filenameVerilog}`, {
             timeout: 4000,
         });
 
@@ -109,12 +116,163 @@ async function compileLola(lolaCode) {
     });
 }
 
-function getTime(separator = " ") {
-    let date = new Date();
-    let currentDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-    let currentTime = date.getHours() + "-" + date.getMinutes() + "-" + date.getSeconds();
-    return currentDate + separator + currentTime
+
+async function verilogToC(verilogCode, moduleName) {
+    let code = '';
+    let conversionErrors = [];
+    let converted = true;
+
+    // write files which will need to be deleted later
+    const datetime = getTime("_");
+
+
+    const filenameVerilog = `compile/verilog_${datetime}.v`;
+    const filenameC = `compile/main_${datetime}.c`;
+
+
+    try {
+        fs.writeFileSync(filenameVerilog, verilogCode);
+
+        console.log(`${getTime()} - verilogToC() - converting verilog to C with ./v2c`);
+
+        const command = `./compile/v2c ${filenameVerilog} --module ${moduleName} ${filenameC}`
+        const {stdout, stderr} = await exec(command, {
+            timeout: 4000,
+        });
+
+        if (stderr) {
+            console.error(`${getTime()} - verilogToC() - error: ${err}`);
+
+            conversionErrors.push(stderr.toString());
+            converted = false;
+
+        } else {
+            const linesOfOutput = stdout.split("\n");
+
+            for (const lineOfOutput of linesOfOutput) {
+                if (lineOfOutput.includes("syntax error")) {
+                    conversionErrors.push(lineOfOutput);
+                    converted = false;
+                }
+                if (lineOfOutput.includes("PARSING ERROR") && converted) {
+                    converted = false;
+                }
+            }
+
+            if (converted) {
+                console.log(`${getTime()} - verilogToC() - reading compiled verilog file: ${filenameC}`);
+                code = fs.readFileSync(filenameC).toString();
+            }
+        }
+    } catch (err) {
+        console.error(`${getTime()} - verilogToC() - error: ${err}`);
+        converted = false;
+        conversionErrors.push(`Error while converting: ${err}`);
+    }
+
+    console.log(`${getTime()} - verilogToC() - delete files: ${filenameC}, ${filenameVerilog}`);
+
+    // delete files
+    if (fs.existsSync(filenameC)) {
+        fs.unlinkSync(filenameC);
+    }
+    if (fs.existsSync(filenameVerilog)) {
+        fs.unlinkSync(filenameVerilog);
+    }
+
+    const resultDict = {
+        converted,
+        conversionErrors,
+        code,
+    };
+
+    console.log(`${getTime()} - verilogToC() - returning: ${JSON.stringify(resultDict)}`);
+
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(resultDict);
+        }, 500);
+    });
+
+
 }
+
+async function verilogToVHDL(verilogCode) {
+    let code = '';
+    let conversionErrors = [];
+    let converted = true;
+
+    // write files which will need to be deleted later
+    const datetime = getTime("_");
+
+
+    const filenameVerilog = `compile/verilog_${datetime}.v`;
+    const filenameVHDL = `compile/vhdl_${datetime}.vhdl`;
+
+
+    try {
+        fs.writeFileSync(filenameVerilog, verilogCode);
+
+        console.log(`${getTime()} - verilogToVHDL() - converting verilog to VHDL with ./iverilog`);
+
+        // iverilog -t vhdl Adder.v -o Adder.vhdl
+        const command = `/usr/bin/iverilog -t vhdl ${filenameVerilog} -o ${filenameVHDL}`
+        const {stdout, stderr} = await exec(command, {timeout: 4000,});
+
+        if (stderr) {
+            console.error(`${getTime()} - verilogToVHDL() - error: ${err}`);
+            conversionErrors.push(stderr.toString());
+            converted = false;
+
+        } else {
+            const linesOfOutput = stdout.split("\n");
+
+            for (const lineOfOutput of linesOfOutput) {
+                if (lineOfOutput.includes("syntax error") || lineOfOutput.includes("error:")) {
+                    conversionErrors.push(lineOfOutput);
+                    converted = false;
+                }
+                if (lineOfOutput.includes("Invalid module instantiation") && converted) {
+                    converted = false;
+                }
+            }
+
+            if (converted) {
+                console.log(`${getTime()} - verilogToVHDL() - reading compiled verilog file: ${filenameVHDL}`);
+                code = fs.readFileSync(filenameVHDL).toString();
+            }
+        }
+    } catch (err) {
+        console.error(`${getTime()} - verilogToVHDL() - error: ${err}`);
+        converted = false;
+        conversionErrors.push(`Error while converting: ${err}`);
+    }
+
+    console.log(`${getTime()} - verilogToVHDL() - delete files: ${filenameVHDL}, ${filenameVerilog}`);
+
+    // delete files
+    if (fs.existsSync(filenameVHDL)) {
+        fs.unlinkSync(filenameVHDL);
+    }
+    if (fs.existsSync(filenameVerilog)) {
+        fs.unlinkSync(filenameVerilog);
+    }
+
+    const resultDict = {
+        converted,
+        conversionErrors,
+        code,
+    };
+
+    console.log(`${getTime()} - verilogToVHDL() - returning: ${JSON.stringify(resultDict)}`);
+
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve(resultDict);
+        }, 500);
+    });
+}
+
 
 // This displays message that the server running and listening to specified port
 app.listen(port, '127.0.0.1', () => console.log(`${getTime()} Listening on port ${port}`));
@@ -242,4 +400,73 @@ app.post('/ask-chat-gpt-lola', async (req, res) => {
     console.log('--- /ask-chat-gpt-lola endpoint call END ---');
 });
 
+app.post('/lola-to-vhdl', async (req, res) => {
+    console.log('--- /lola-to-vhdl endpoint call START ---');
+    console.log(`${getTime()} Received request with payload: ${JSON.stringify(req.body)}`);
 
+    let resp = {
+        'status': 200,
+        'conversionErrors': [],
+        'code': "",
+        'converted': true
+    }
+
+    console.log(`${getTime()} Trying to compile lola code to verilog first...`);
+    // try compiling lola code to verilog
+    compileLola(req.body.code).then((compiledDict) => {
+        console.log(`${getTime()} compiled LolaDict: ${JSON.stringify(compiledDict)}`);
+
+        // when it's compiled to verilog, convert verilog to VHDL
+        verilogToVHDL(compiledDict.compiledVerilogCode).then((convertedDict) => {
+
+            resp.code = convertedDict.code
+            resp.conversionErrors = convertedDict.conversionErrors
+            resp.converted = convertedDict.converted
+            console.log(`${getTime()} returning response: ${JSON.stringify(resp)}`);
+            console.log('--- /lola-to-vhdl endpoint call END ---')
+            res.send(JSON.stringify(resp));
+
+        }).catch((err) => {
+            console.error(err);
+        })
+
+    }).catch((err) => {
+        console.error(err);
+    })
+});
+
+app.post('/lola-to-c', async (req, res) => {
+    console.log('--- /lola-to-c endpoint call START ---');
+    console.log(`${getTime()} Received request with payload: ${JSON.stringify(req.body)}`);
+
+    let resp = {
+        'status': 200,
+        'conversionErrors': [],
+        'code': "",
+        'converted': true
+    }
+
+    console.log(`${getTime()} Trying to compile lola code to verilog first...`);
+    // try compiling lola code to verilog
+    compileLola(req.body.code).then((compiledDict) => {
+        console.log(`${getTime()} compiled LolaDict: ${JSON.stringify(compiledDict)}`);
+
+        // when it's compiled to verilog, convert verilog to C
+        let moduleName = req.body.moduleName;
+        verilogToC(compiledDict.compiledVerilogCode, moduleName).then((convertedDict) => {
+
+            resp.code = convertedDict.code
+            resp.conversionErrors = convertedDict.conversionErrors
+            resp.converted = convertedDict.converted
+            console.log(`${getTime()} returning response: ${JSON.stringify(resp)}`);
+            console.log('--- /lola-to-c endpoint call END ---')
+            res.send(JSON.stringify(resp));
+
+        }).catch((err) => {
+            console.error(err);
+        })
+
+    }).catch((err) => {
+        console.error(err);
+    })
+});
