@@ -11,9 +11,8 @@ import * as examples from './Lola/examples.js';
 import {
     convertLolaToVerilog,
     checkLolaCodeValid,
-    convertLolaToPython,
+    convertLolaToSystemC,
     convertLolaToC,
-    convertLolaToGo,
     convertLolaToLogisim,
     convertLolaToVHDL,
     simulateLolaCode,
@@ -168,12 +167,11 @@ function configurePlayground(playground) {
 
     // add lola exports
     convertFolder.add({"To Verilog": convertLolaToVerilog}, "To Verilog").onChange();
-    convertFolder.add({"To VHDL": convertLolaToVHDL}, "To VHDL").onChange();
     convertFolder.add({"To C (experimental)": convertLolaToC}, "To C (experimental)").onChange();
+    convertFolder.add({"To VHDL": convertLolaToVHDL}, "To VHDL").onChange();
+    convertFolder.add({"To SystemC": convertLolaToSystemC}, "To SystemC").onChange();
 
     // not implemented
-    convertFolder.add({"To Python": convertLolaToPython}, "To Python").onChange();
-    convertFolder.add({"To Go": convertLolaToGo}, "To Go").onChange();
     convertFolder.add({"To Logisim": convertLolaToLogisim}, "To Logisim").onChange();
 
     // /Lola/Examples
@@ -309,8 +307,6 @@ function createWorkspace(blocklyDiv, options) {
                 if (lastInvalidLolaGeneratedCode !== lola.generator.workspaceToCode(Blockly.getMainWorkspace())) {
 
                     // don't warn the user here
-                    // toastWarning("Previously validated code has been changed. " +
-                    //     "New validation will be needed for code simulating & exporting ")
                     toggleInvalidCodeMethods(false)
 
                 }

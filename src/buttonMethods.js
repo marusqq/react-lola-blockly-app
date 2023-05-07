@@ -233,13 +233,35 @@ export async function convertLolaToC() {
     }
 }
 
-export async function convertLolaToPython() {
-    toastInfo("not implemented yet")
-}
+export async function convertLolaToSystemC() {
+    const generatedCode = lola.generator.workspaceToCode(Blockly.getMainWorkspace());
+    const moduleName = lola.getModuleNameLolaCode(generatedCode)
 
+    try {
+        const response = await fetch('/lola-to-system-c', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({code: generatedCode, moduleName: moduleName})
+        });
 
-export async function convertLolaToGo() {
-    toastInfo("not implemented yet")
+        const content = await response.json();
+
+        if (content.converted) {
+            toastSuccess(`Downloading ${moduleName} in systemC`)
+            save(`${moduleName}.cpp`, content.codeCPP);
+            save(`${moduleName}.h`, content.codeH);
+
+        } else {
+            let message = `Converting to ${moduleName} system C failed.\nErrors:\n - ${content.conversionErrors.join('\n -')}`
+            toastWarning(message, ONLY_CLOSABLE_TOASTR_SETTINGS);
+        }
+    } catch (error) {
+        console.error(error);
+        toastError('An error occurred while processing your request. Please try again later.');
+    }
 }
 
 export async function convertLolaToLogisim() {
