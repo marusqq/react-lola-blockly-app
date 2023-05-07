@@ -23,6 +23,13 @@ module.exports = function (app) {
         }),
     );
     app.use(
+        '/lola-to-system-c',
+        createProxyMiddleware({
+            target: 'http://localhost:5000',
+            changeOrigin: true,
+        }),
+    );
+    app.use(
         '/validate-lola',
         createProxyMiddleware({
             target: 'http://localhost:5000',
