@@ -1,0 +1,14 @@
+lii 0 33
+lii 1 33
+lii 2 33
+lii 3 33
+lii 4 33
+lii 5 33
+lii 6 33
+shl 0
+shr 1
+rol 2
+ror 3
+not 4
+n1 5
+n0 6

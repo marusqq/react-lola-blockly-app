@@ -19,7 +19,7 @@ export const ONLY_CLOSABLE_TOASTR_SETTINGS = {
 }
 
 
-function _convertNewlinesToBr(str) {
+export function convertNewlinesToBr(str) {
     return str.replace(/\n/g, '<br>');
 }
 
@@ -136,17 +136,17 @@ export function alertGetUserInputBool(label="choose", confirmButtonText="yes", c
 }
 
 export function toastSuccess(message, options = {}) {
-    toastr.success(_convertNewlinesToBr(message), '', {...GLOBAL_TOASTR_SETTINGS, ...options});
+    toastr.success(convertNewlinesToBr(message), '', {...GLOBAL_TOASTR_SETTINGS, ...options});
 }
 
 export function toastError(message, options = {}) {
-    toastr.error(_convertNewlinesToBr(message), '', {...GLOBAL_TOASTR_SETTINGS, ...options});
+    toastr.error(convertNewlinesToBr(message), '', {...GLOBAL_TOASTR_SETTINGS, ...options});
 }
 
 export function toastWarning(message, options = {}) {
-    toastr.warning(_convertNewlinesToBr(message), '', {...GLOBAL_TOASTR_SETTINGS, ...options});
+    toastr.warning(convertNewlinesToBr(message), '', {...GLOBAL_TOASTR_SETTINGS, ...options});
 }
 
 export function toastInfo(message, options = {}) {
-    toastr.info(_convertNewlinesToBr(message), '', {...GLOBAL_TOASTR_SETTINGS, ...options});
+    toastr.info(convertNewlinesToBr(message), '', {...GLOBAL_TOASTR_SETTINGS, ...options});
 }

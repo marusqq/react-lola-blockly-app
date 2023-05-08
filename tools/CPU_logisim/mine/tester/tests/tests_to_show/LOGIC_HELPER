@@ -1,0 +1,9 @@
+lii 0 11
+lii 1 5
+lii 2 7
+lii 3 9
+lii 4 2
+lii 5 3
+xor 0 1
+and 2 3
+or 4 5

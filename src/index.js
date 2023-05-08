@@ -13,9 +13,8 @@ import {
     checkLolaCodeValid,
     convertLolaToSystemC,
     convertLolaToC,
-    convertLolaToLogisim,
     convertLolaToVHDL,
-    simulateLolaCode,
+    stimulateLolaCode,
     toggleValidCodeMethods,
     toggleInvalidCodeMethods,
     validLolaGeneratedCode,
@@ -157,7 +156,7 @@ function configurePlayground(playground) {
     // /Lola/
     let lolaFolder = gui.addFolder('Lola')
 
-    lolaFolder.add({"Simulate": simulateLolaCode}, "Simulate").onChange();
+    lolaFolder.add({"Stimulate": stimulateLolaCode}, "Stimulate").onChange();
     lolaFolder.add({"Validate": checkLolaCodeValid}, "Validate").onChange();
     lolaFolder.add({"Ask ChatGPT about errors": consultChatGPT}, "Ask ChatGPT about errors").onChange();
 
@@ -170,9 +169,6 @@ function configurePlayground(playground) {
     convertFolder.add({"To C (experimental)": convertLolaToC}, "To C (experimental)").onChange();
     convertFolder.add({"To VHDL": convertLolaToVHDL}, "To VHDL").onChange();
     convertFolder.add({"To SystemC": convertLolaToSystemC}, "To SystemC").onChange();
-
-    // not implemented
-    convertFolder.add({"To Logisim": convertLolaToLogisim}, "To Logisim").onChange();
 
     // /Lola/Examples
     let examplesFolder = lolaFolder.addFolder('Examples')

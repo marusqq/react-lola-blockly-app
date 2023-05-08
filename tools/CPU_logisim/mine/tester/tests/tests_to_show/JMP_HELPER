@@ -1,0 +1,10 @@
+jnzi 08
+--jumps to 08 if ZF = 0
+jnbafi 10
+--jumps to 10 if BAF = 0
+jzi 18
+--jumps to 18 if ZF = 1
+jbafi 20
+--jumps to 20 if BAF = 1
+jmpi 28
+--jumps to 28 
