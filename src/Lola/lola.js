@@ -279,8 +279,6 @@ function generateLolaGenerator() {
             'POWER': ['**', generator.ORDER_NONE],
             'STATEMENT1': ['&', generator.ORDER_NONE],
             'STATEMENT2': ['#', generator.ORDER_NONE],
-            'STATEMENT3': ['->', generator.ORDER_NONE],
-            'STATEMENT4': ['<-', generator.ORDER_NONE],
             'STATEMENT5': [':', generator.ORDER_NONE],
             'STATEMENT6': ['=', generator.ORDER_NONE]
         };
@@ -303,8 +301,6 @@ function generateLolaGenerator() {
             'POWER': ['**', generator.ORDER_NONE],
             'STATEMENT1': ['&', generator.ORDER_NONE],
             'STATEMENT2': ['#', generator.ORDER_NONE],
-            'STATEMENT3': ['->', generator.ORDER_NONE],
-            'STATEMENT4': ['<-', generator.ORDER_NONE],
             'STATEMENT5': [':', generator.ORDER_NONE],
             'STATEMENT6': ['=', generator.ORDER_NONE]
         };
@@ -402,6 +398,19 @@ function generateLolaGenerator() {
         return block.getFieldValue('text_help')
     }
 
+    // ----------------------------- CONDITIONAL ----------------------------------
+    generator['if_statement'] = function(block) {
+
+        console.log(block.getFieldValue('if_value'))
+        const ifStatement = generator.valueToCode(block, 'if_value', generator.ORDER_NONE) || 'ifStatement';
+        const thenStatement = generator.valueToCode(block, 'then_value', generator.ORDER_NONE) || 'thenStatement';
+        const elseStatement = generator.valueToCode(block, 'else_value', generator.ORDER_NONE) || 'elseStatement';
+
+        let code = ifStatement + ' -> ' + thenStatement + ' : ' + elseStatement;
+
+        return [code, generator.ORDER_NONE];
+    };
+
     return generator
 }
 
@@ -436,14 +445,15 @@ export const toolbox = `
       <block type="brackets_block"/>
     </category>
 
-    <category name="Loops">
+    <category name="Flow Control">
+      <block type="if_statement"/>
       <block type="controls_for"/>
     </category>
 
     <category name="Comments">
       <block type="comment_block"/>
     </category>
-
+    
     <category name="Math">
       <block type="math_number"><field name="NUM">0</field></block>
       <block type="math_arithmetic"/>

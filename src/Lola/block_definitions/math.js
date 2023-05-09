@@ -19,10 +19,8 @@ Blockly.defineBlocksWithJsonArray([{
                 ["%{BKY_MATH_POWER_SYMBOL}", "POWER"],
                 ["&", "STATEMENT1"],
                 ["#", "STATEMENT2"],
-                ["->", "STATEMENT3"],
-                ["<-", "STATEMENT4"],
-                [":", "STATEMENT5"],
-                ["=", "STATEMENT6"]
+                [":", "STATEMENT3"],
+                ["=", "STATEMENT4"]
 
             ]
         },
@@ -42,10 +40,8 @@ Blockly.defineBlocksWithJsonArray([{
                 ["%{BKY_MATH_POWER_SYMBOL}", "POWER"],
                 ["&", "STATEMENT1"],
                 ["#", "STATEMENT2"],
-                ["->", "STATEMENT3"],
-                ["<-", "STATEMENT4"],
-                [":", "STATEMENT5"],
-                ["=", "STATEMENT6"]
+                [":", "STATEMENT3"],
+                ["=", "STATEMENT4"]
             ]
         },
         {
@@ -83,10 +79,8 @@ Blockly.defineBlocksWithJsonArray([{
                     ["%{BKY_MATH_POWER_SYMBOL}", "POWER"],
                     ["&", "STATEMENT1"],
                     ["#", "STATEMENT2"],
-                    ["->", "STATEMENT3"],
-                    ["<-", "STATEMENT4"],
-                    [":", "STATEMENT5"],
-                    ["=", "STATEMENT6"]
+                    [":", "STATEMENT3"],
+                    ["=", "STATEMENT4"]
                 ]
             },
             {
