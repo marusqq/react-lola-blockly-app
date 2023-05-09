@@ -134,18 +134,21 @@ async function compileLola(lolaCode) {
     //   pos 252  err:  bad statement
     // to
     //  assignment to read-only on line 11 in pos 364 ( y := sc.4 -> {t2[15:0], 0'16} : t2;)
-
     const regex = /pos\s+(\d+)/;
     for (const compilationErrorPos of compilationErrorsPos) {
         const match = compilationErrorPos.match(regex);
-        let actualError = compilationErrorPos.replace(match[0], '').replace('err: ', '').trim()
-        let errorPosNo = match[0]
-        let failedLine = findLineOfCode(lolaCode, match[1])
-        let errorLineNo = failedLine.lineNo
-        let errorLine = failedLine.line.trim()
+        if (match) {
+            let actualError = compilationErrorPos.replace(match[0], '').replace('err: ', '').trim()
+            let errorPosNo = match[0]
+            let failedLine = findLineOfCode(lolaCode, match[1])
+            let errorLineNo = failedLine.lineNo
+            let errorLine = failedLine.line.trim()
+            let fullCompilationFail = `${actualError} on line ${errorLineNo} in ${errorPosNo} (${errorLine})`
+            compilationErrors.push(fullCompilationFail)
+        } else {
+            compilationErrors.push(compilationErrorPos)
+        }
 
-        let fullCompilationFail = `${actualError} on line ${errorLineNo} in ${errorPosNo} (${errorLine})`
-        compilationErrors.push(fullCompilationFail)
     }
 
     const resultDict = {
