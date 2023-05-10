@@ -218,14 +218,14 @@ export async function checkLolaCodeValid() {
 
         } else if (content.emptyCode) {
 
-            currentLolaValidationErrors = content.compilationErrors.join('\n -')
-            let message = `Validation failed.\nErrors:\n - ${content.compilationErrors.join('\n -')}`
+            currentLolaValidationErrors = content.compilationErrors.join('\n - ')
+            let message = `Validation failed.\nErrors:\n - ${content.compilationErrors.join('\n - ')}`
             toggleValidCodeMethods(false)
             toastInfo(message);
 
         } else {
-            currentLolaValidationErrors = content.compilationErrors.join('\n -')
-            let message = `Validation failed.\nErrors:\n - ${content.compilationErrors.join('\n -')}`
+            currentLolaValidationErrors = content.compilationErrors.join('\n - ')
+            let message = `Validation failed.\nErrors:\n - ${content.compilationErrors.join('\n - ')}`
             toggleValidCodeMethods(false)
             toggleInvalidCodeMethods(true)
             toastWarning(message, ONLY_CLOSABLE_TOASTR_SETTINGS);

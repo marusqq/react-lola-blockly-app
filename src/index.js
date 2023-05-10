@@ -215,6 +215,13 @@ function configurePlayground(playground) {
     toggleInvalidCodeMethods(false)
 }
 
+function removeMonacoModelHighlighting() {
+
+    const model = window.monaco.editor.getModels()[8];
+    window.monaco.editor.setModelLanguage(model, 'plaintext');
+}
+
+
 createPlayground(
     document.getElementById('blocklyArea'),
     createWorkspace,
@@ -222,7 +229,8 @@ createPlayground(
     playgroundConfig,
     'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.19.2/min/vs')
     .then(function (playground) {
-        configurePlayground(playground);
+        configurePlayground(playground)
+        removeMonacoModelHighlighting()
     });
 
 
@@ -309,24 +317,6 @@ function createWorkspace(blocklyDiv, options) {
             }
         }
     });
-
-    // const observer = new MutationObserver(function(mutations) {
-    //     console.log('hihi')
-    //     mutations.forEach(function(mutation) {
-    //         if (mutation.type === 'childList' && mutation.addedNodes.length) {
-    //             const lolaTab = document.querySelector('[data-tab="Lola"]');
-    //             console.log('childlist for each')
-    //             if (lolaTab) {
-    //                 console.log(lolaTab)
-    //                 lolaTab.click();
-    //                 observer.disconnect(); // Stop watching for changes once element is clicked
-    //             }
-    //         }
-    //     });
-    // });
-    //
-    // observer.observe(document.body, { childList: true, subtree: false });
-
 
     return workspace;
 }

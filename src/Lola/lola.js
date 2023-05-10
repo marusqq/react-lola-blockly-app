@@ -217,6 +217,73 @@ function generateLolaGenerator() {
         return code
     };
 
+    generator['variable_declaration_block_3'] = function (block) {
+
+        const variable_name =
+            generator.valueToCode(block, 'variable_name', generator.ORDER_NONE) || '0';
+
+        const variable_type = block.getFieldValue('variable_type')
+        let code = variable_name + ': ' + variable_type + ';';
+        return code
+    };
+
+    generator['variable_declaration_block_4'] = function (block) {
+
+        const variable_in_out_type = block.getFieldValue('variable_in_out_type')
+        const variable_in_out =
+            generator.valueToCode(block, 'variable_in_out', generator.ORDER_NONE) || '0';
+        const bit_variable =
+            generator.valueToCode(block, 'bit_variable', generator.ORDER_NONE) || '0';
+
+        const variable_type = block.getFieldValue('variable_type')
+
+        let code = `${variable_in_out_type} ${variable_in_out}: [${bit_variable}] ${variable_type};`
+        return code
+    };
+
+    generator['variable_declaration_block_5'] = function (block) {
+
+        const variable_in_out_type = block.getFieldValue('variable_in_out_type')
+        const variable_in_out =
+            generator.valueToCode(block, 'variable_in_out', generator.ORDER_NONE) || '0';
+
+        return `${variable_in_out_type} ${variable_in_out}`
+    };
+
+    generator['two_variables_comma'] = function (block) {
+
+        const var1 = generator.valueToCode(block, 'var1', generator.ORDER_NONE) || '0';
+        const var2 = generator.valueToCode(block, 'var2', generator.ORDER_NONE) || '0';
+
+        return [`${var1}, ${var2}`, generator.ORDER_NONE]
+    };
+
+    generator['two_variables_dot'] = function (block) {
+
+        const var1 = generator.valueToCode(block, 'var1', generator.ORDER_NONE) || '0';
+        const var2 = generator.valueToCode(block, 'var2', generator.ORDER_NONE) || '0';
+
+        return [`${var1}.${var2}`, generator.ORDER_NONE]
+    };
+
+    generator['two_variables_apostrophe'] = function (block) {
+
+        const var1 = generator.valueToCode(block, 'var1', generator.ORDER_NONE) || '0';
+        const var2 = generator.valueToCode(block, 'var2', generator.ORDER_NONE) || '0';
+
+        return [`${var1}'${var2}`, generator.ORDER_NONE]
+    };
+
+    generator['variable_bit_check'] = function (block) {
+
+        const variable = generator.valueToCode(block, 'var', generator.ORDER_NONE) || '0';
+        const bit_start = generator.valueToCode(block, 'bit_start', generator.ORDER_NONE) || '0';
+        const bit_end = generator.valueToCode(block, 'bit_end', generator.ORDER_NONE) || '0';
+
+        return [`${variable}[${bit_start}:${bit_end}]`, generator.ORDER_NONE]
+    };
+
+
     // Variable setter
     generator['variables_set'] = function (block) {
         let argument0 = generator.valueToCode(block, 'VALUE',
@@ -256,7 +323,7 @@ function generateLolaGenerator() {
         let leftBracket = bracketTypes[block.getFieldValue('bracketsLeft')]
         let rightBracket = bracketTypes[block.getFieldValue('bracketsRight')]
 
-        let variable = generator.valueToCode(block,'variableInside', generator.ORDER_NONE)
+        let variable = generator.valueToCode(block, 'variableInside', generator.ORDER_NONE)
         let code = leftBracket + variable + rightBracket
 
         return [code, generator.ORDER_NONE]
@@ -279,10 +346,8 @@ function generateLolaGenerator() {
             'POWER': ['**', generator.ORDER_NONE],
             'STATEMENT1': ['&', generator.ORDER_NONE],
             'STATEMENT2': ['#', generator.ORDER_NONE],
-            'STATEMENT3': ['->', generator.ORDER_NONE],
-            'STATEMENT4': ['<-', generator.ORDER_NONE],
-            'STATEMENT5': [':', generator.ORDER_NONE],
-            'STATEMENT6': ['=', generator.ORDER_NONE]
+            'STATEMENT3': [':', generator.ORDER_NONE],
+            'STATEMENT4': ['=', generator.ORDER_NONE]
         };
         let tuple = OPERATORS[block.getFieldValue('OP')];
         let operator = tuple[0];
@@ -303,10 +368,8 @@ function generateLolaGenerator() {
             'POWER': ['**', generator.ORDER_NONE],
             'STATEMENT1': ['&', generator.ORDER_NONE],
             'STATEMENT2': ['#', generator.ORDER_NONE],
-            'STATEMENT3': ['->', generator.ORDER_NONE],
-            'STATEMENT4': ['<-', generator.ORDER_NONE],
-            'STATEMENT5': [':', generator.ORDER_NONE],
-            'STATEMENT6': ['=', generator.ORDER_NONE]
+            'STATEMENT3': [':', generator.ORDER_NONE],
+            'STATEMENT4': ['=', generator.ORDER_NONE]
         };
         let tuple1 = OPERATORS[block.getFieldValue('OP')];
         let operator1 = tuple1[0];
@@ -343,7 +406,7 @@ function generateLolaGenerator() {
     ////// -------------------------------------------
 
     // Array
-    generator['lists_create_with'] = function(block) {
+    generator['lists_create_with'] = function (block) {
         const values = [];
         for (let i = 0; i < block.itemCount_; i++) {
             const valueCode = generator.valueToCode(block, 'ADD' + i,
@@ -402,7 +465,26 @@ function generateLolaGenerator() {
         return block.getFieldValue('text_help')
     }
 
+    // ----------------------------- CONDITIONAL ----------------------------------
+    generator['if_statement'] = function (block) {
+        const ifStatement = generator.valueToCode(block, 'if_value', generator.ORDER_NONE) || 'ifStatement';
+        const thenStatement = generator.valueToCode(block, 'then_value', generator.ORDER_NONE) || 'thenStatement';
+        const elseStatement = generator.valueToCode(block, 'else_value', generator.ORDER_NONE) || 'elseStatement';
+
+        let code = ifStatement + ' -> ' + thenStatement + ' : ' + elseStatement;
+
+        return [code, generator.ORDER_NONE];
+    };
+
+    generator['negative_variable'] = function (block) {
+        const val = generator.valueToCode(block, 'variable_name', generator.ORDER_NONE);
+        return [`~${val}`, generator.ORDER_NONE];
+    };
+
+
     return generator
+
+
 }
 
 export function getModuleNameLolaCode(lolaCode) {
@@ -432,26 +514,31 @@ export const toolbox = `
       <block type="variables_name_get"></block>
       <block type="constant_declaration_block"/>
       <block type="variable_declaration_block"/>
+      <block type="variable_declaration_block_4"/>
+      <block type="variable_declaration_block_5"/>
       <block type="variable_declaration_block_2"/>
+      <block type="variable_declaration_block_3"/>
+      <block type="variable_bit_check"/>
+      <block type="two_variables_comma"/>
+      <block type="two_variables_dot"/>
+      <block type="two_variables_apostrophe"/>
       <block type="brackets_block"/>
     </category>
 
-    <category name="Loops">
+    <category name="Flow Control">
+      <block type="if_statement"/>
       <block type="controls_for"/>
+      <block type="negative_variable"/>
     </category>
 
     <category name="Comments">
       <block type="comment_block"/>
     </category>
-
+    
     <category name="Math">
       <block type="math_number"><field name="NUM">0</field></block>
       <block type="math_arithmetic"/>
       <block type="math_arithmetic_three"/>
-    </category>
-
-    <category name="Logic">
-      <block type="logic_null"/>
     </category>
     
     <category name="Lists">

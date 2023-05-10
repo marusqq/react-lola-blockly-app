@@ -134,18 +134,21 @@ async function compileLola(lolaCode) {
     //   pos 252  err:  bad statement
     // to
     //  assignment to read-only on line 11 in pos 364 ( y := sc.4 -> {t2[15:0], 0'16} : t2;)
-
     const regex = /pos\s+(\d+)/;
     for (const compilationErrorPos of compilationErrorsPos) {
         const match = compilationErrorPos.match(regex);
-        let actualError = compilationErrorPos.replace(match[0], '').replace('err: ', '').trim()
-        let errorPosNo = match[0]
-        let failedLine = findLineOfCode(lolaCode, match[1])
-        let errorLineNo = failedLine.lineNo
-        let errorLine = failedLine.line.trim()
+        if (match) {
+            let actualError = compilationErrorPos.replace(match[0], '').replace('err: ', '').trim()
+            let errorPosNo = match[0]
+            let failedLine = findLineOfCode(lolaCode, match[1])
+            let errorLineNo = failedLine.lineNo
+            let errorLine = failedLine.line.trim()
+            let fullCompilationFail = `${actualError} on line ${errorLineNo} in ${errorPosNo} (${errorLine})`
+            compilationErrors.push(fullCompilationFail)
+        } else {
+            compilationErrors.push(compilationErrorPos)
+        }
 
-        let fullCompilationFail = `${actualError} on line ${errorLineNo} in ${errorPosNo} (${errorLine})`
-        compilationErrors.push(fullCompilationFail)
     }
 
     const resultDict = {
@@ -663,8 +666,19 @@ app.post('/generate-verilog-testbench', async (req, res) => {
 
         const prompt = `For this verilog code: ${verilogCode}\n
         Create minimal testbench, don't reach character limit, only reply with code.
+        Don't add backtick at the end and don't use comments at testbench. Use small values
+        Print:
+            - variable names and their values,
+            - results,
+            - expected results 
+            - if results != expected results
+        `
+
+        const oldPrompt = `For this verilog code: ${verilogCode}\n
+        Create minimal testbench, don't reach character limit, only reply with code.
         Add prints for variables (specify which are input / output) and results. 
         Print what was expected and use close to none comments. Don't add backtick at the end`
+
 
         // set up the API request data
         const data = {
@@ -772,11 +786,27 @@ app.post('/stimulate-verilog', async (req, res) => {
         const command = `/usr/bin/iverilog -o ${filenameStimulus} ${filenameTestbench} ${filenameVerilog}`
         const {stdout, stderr} = await exec(command, {timeout: 9000,});
 
-        // if some unix errors
-        if (stderr) {
-            console.error(`${getTime()} - /stimulate-verilog - unix error10: ${err}`);
+        // unix errors might be warnings, go through them
+        let errOK = true;
+
+        // IF THERE IS ANY OUTPUT => go through it, warning: OK, anything else => gg
+        if (stderr.length > 0) {
+            const linesOfErrors = stderr.split("\n");
+            for (const lineOfError of linesOfErrors) {
+                // if line of output is not 'warning: ' and there is something
+                if (!(lineOfError.includes('warning: ')) && lineOfError.length > 0) {
+                    errOK = false;
+                    resp.stimulatedOutput.push(linesOfErrors);
+                    break;
+                }
+            }
+        }
+
+        // if error => bad
+        if (!errOK) {
+            console.error(`${getTime()} - /stimulate-verilog - unix error10: ${stderr}`);
             resp.stimulated = false;
-            resp.stimulatedOutput = [];
+            resp.stimulatedOutput = [stderr];
             if (fs.existsSync(filenameVerilog)) {
                 fs.unlinkSync(filenameVerilog);
             }
@@ -793,14 +823,26 @@ app.post('/stimulate-verilog', async (req, res) => {
             res.send(JSON.stringify(resp));
 
         } else {
+            // if error => Ok, go
+            let stdoutOK = true;
 
-            // IF THERE IS ANY OUTPUT
-            // WE EXPECT NO OUTPUT
+            // IF THERE IS ANY OUTPUT => go through it, warning: OK, anything else => gg
             if (stdout.length > 0) {
                 const linesOfOutput = stdout.split("\n");
                 for (const lineOfOutput of linesOfOutput) {
-                    resp.stimulatedOutput.push(lineOfOutput);
+                    // if line of output is not 'warning: '
+                    if (!lineOfOutput.includes('warning: ') && lineOfOutput.length > 0) {
+                        stdoutOK = false;
+                        resp.stimulatedOutput.push(linesOfOutput);
+                        break;
+                    }
                 }
+            }
+
+            // if code is bad
+            if (!stdoutOK) {
+                console.log('code bad?')
+
                 resp.stimulated = false;
                 if (fs.existsSync(filenameVerilog)) {
                     fs.unlinkSync(filenameVerilog);
@@ -879,7 +921,7 @@ app.post('/stimulate-verilog', async (req, res) => {
 
 
     } catch (err) {
-        console.error(`${getTime()} - /stimulate-verilog - error12: ${err}`);
+        console.error(`${getTime()} - /stimulate-verilog - error12`);
 
         resp.stimulated = false;
         resp.stimulatedOutput = [err.toString()];
