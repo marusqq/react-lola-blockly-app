@@ -343,11 +343,16 @@ function generateLolaGenerator() {
             'MINUS': ['-', generator.ORDER_NONE],
             'MULTIPLY': ['*', generator.ORDER_NONE],
             'DIVIDE': ['/', generator.ORDER_NONE],
-            'POWER': ['**', generator.ORDER_NONE],
+            'POWER': ['^', generator.ORDER_NONE],
             'STATEMENT1': ['&', generator.ORDER_NONE],
             'STATEMENT2': ['#', generator.ORDER_NONE],
             'STATEMENT3': [':', generator.ORDER_NONE],
-            'STATEMENT4': ['=', generator.ORDER_NONE]
+            'STATEMENT4': ['=', generator.ORDER_NONE],
+            'STATEMENT5': ['|', generator.ORDER_NONE],
+            'STATEMENT6': ['>', generator.ORDER_NONE],
+            'STATEMENT7': ['>=', generator.ORDER_NONE],
+            'STATEMENT8': ['<', generator.ORDER_NONE],
+            'STATEMENT9': ['<=', generator.ORDER_NONE]
         };
         let tuple = OPERATORS[block.getFieldValue('OP')];
         let operator = tuple[0];
@@ -365,11 +370,16 @@ function generateLolaGenerator() {
             'MINUS': ['-', generator.ORDER_NONE],
             'MULTIPLY': ['*', generator.ORDER_NONE],
             'DIVIDE': ['/', generator.ORDER_NONE],
-            'POWER': ['**', generator.ORDER_NONE],
+            'POWER': ['^', generator.ORDER_NONE],
             'STATEMENT1': ['&', generator.ORDER_NONE],
             'STATEMENT2': ['#', generator.ORDER_NONE],
             'STATEMENT3': [':', generator.ORDER_NONE],
-            'STATEMENT4': ['=', generator.ORDER_NONE]
+            'STATEMENT4': ['=', generator.ORDER_NONE],
+            'STATEMENT5': ['|', generator.ORDER_NONE],
+            'STATEMENT6': ['>', generator.ORDER_NONE],
+            'STATEMENT7': ['=>', generator.ORDER_NONE],
+            'STATEMENT8': ['<', generator.ORDER_NONE],
+            'STATEMENT9': ['<=', generator.ORDER_NONE]
         };
         let tuple1 = OPERATORS[block.getFieldValue('OP')];
         let operator1 = tuple1[0];
@@ -510,7 +520,6 @@ export const toolbox = `
     <category name="Variables">
       <button text="Create Variable" callbackKey="createVariableButton"></button>
       <block type="variables_set"></block>
-      <block type="variables_get"></block>
       <block type="variables_name_get"></block>
       <block type="constant_declaration_block"/>
       <block type="variable_declaration_block"/>

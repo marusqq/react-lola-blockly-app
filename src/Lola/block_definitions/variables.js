@@ -4,7 +4,7 @@ Blockly.defineBlocksWithJsonArray([
     // Variable name get block
     {
         "type": "variables_name_get",
-        "message0": "nameof: %1",
+        "message0": "%1",
         "args0": [{
             "type": "field_variable",
             "name": "VAR",

@@ -20,10 +20,13 @@ Blockly.defineBlocksWithJsonArray([{
                 ["&", "STATEMENT1"],
                 ["#", "STATEMENT2"],
                 [":", "STATEMENT3"],
-                ["=", "STATEMENT4"]
-
-            ]
-        },
+                ["=", "STATEMENT4"],
+                ["|", "STATEMENT5"],
+                [">", "STATEMENT6"],
+                ["≥", "STATEMENT7"],
+                ["<", "STATEMENT8"],
+                ["≤", "STATEMENT9"],
+            ]},
         {
             "type": "input_value",
             "name": "B",
@@ -41,9 +44,13 @@ Blockly.defineBlocksWithJsonArray([{
                 ["&", "STATEMENT1"],
                 ["#", "STATEMENT2"],
                 [":", "STATEMENT3"],
-                ["=", "STATEMENT4"]
-            ]
-        },
+                ["=", "STATEMENT4"],
+                ["|", "STATEMENT5"],
+                [">", "STATEMENT6"],
+                ["≥", "STATEMENT7"],
+                ["<", "STATEMENT8"],
+                ["≤", "STATEMENT9"]
+            ]},
         {
             "type": "input_value",
             "name": "C",
@@ -80,7 +87,13 @@ Blockly.defineBlocksWithJsonArray([{
                     ["&", "STATEMENT1"],
                     ["#", "STATEMENT2"],
                     [":", "STATEMENT3"],
-                    ["=", "STATEMENT4"]
+                    ["=", "STATEMENT4"],
+                    ["|", "STATEMENT5"],
+                    [">", "STATEMENT6"],
+                    ["≥", "STATEMENT7"],
+                    ["<", "STATEMENT8"],
+                    ["≤", "STATEMENT9"],
+
                 ]
             },
             {

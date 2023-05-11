@@ -177,6 +177,7 @@ function configurePlayground(playground) {
     let basicExamplesFolder = examplesFolder.addFolder('Basic Examples')
 
     basicExamplesFolder.add({"Adder.Lola": examples.adderBasic}, "Adder.Lola").onChange();
+    basicExamplesFolder.add({"ALU.Lola": examples.aluExample}, "ALU.Lola").onChange();
 
     // /Lola/Examples/Wirth RISCV
     let wirthRiscFolder = examplesFolder.addFolder('Wirth RISC5')
@@ -206,7 +207,7 @@ function configurePlayground(playground) {
     gui.add({"Import workspace as XML": importXml}, "Import workspace as XML").onChange();
 
     // add debug
-    gui.add({"Debug": testingDebug}, "Debug").onChange();
+    // gui.add({"Debug": testingDebug}, "Debug").onChange();
 
     // since the code was not validated, hide folders / functions
     toggleValidCodeMethods(false)
