@@ -34,7 +34,7 @@ Blockly.defineBlocksWithJsonArray([{
 },
     {
         "type": "negative_variable",
-        "message0": "~%1;",
+        "message0": "~%1",
         "args0": [
             {
                 "type": "input_value",

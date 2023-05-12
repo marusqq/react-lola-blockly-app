@@ -48,3 +48,1258 @@ export function adderBasic() {
     const adderBasicXml = `<?xml version="1.0"?><xml xmlns="https://developers.google.com/blockly/xml"><variables><variable id="XC{=dhDs;A!7qyb4=n,/">c</variable><variable id="[}OtT\`3FPRJXz06kV[\`W">x</variable><variable id="FMKQqe?GDrT]U|ejp5FW">y</variable></variables><block type="module_block_module_begin" id="%CSH(GXS_lW:smRGIqLs" x="38" y="63"><field name="moduleName">Adder</field><statement name="module_parameters_input"><block type="variable_declaration_block" id="$bm}qKfRYYNIDEKwIdJx"><field name="variable_in_out_type">IN</field><field name="variable_type">WORD</field><value name="variable_in_out"><block type="variables_name_get" id="-UxOC?z3sGNP/0CjamAi"><field name="VAR" id="[}OtT\`3FPRJXz06kV[\`W">x</field></block></value><next><block type="variable_declaration_block" id="[U1$[qYgIlG}N)Iw8bT%"><field name="variable_in_out_type">IN</field><field name="variable_type">WORD</field><value name="variable_in_out"><block type="variables_name_get" id="+c2\`rDi*JVBP?41-N4X}"><field name="VAR" id="FMKQqe?GDrT]U|ejp5FW">y</field></block></value><next><block type="variable_declaration_block" id="t#NN9Stp,NI8s_{x|*9K"><field name="variable_in_out_type">OUT</field><field name="variable_type">WORD</field><value name="variable_in_out"><block type="variables_name_get" id="Dccw)F{WISX/KN)CnQ!-"><field name="VAR" id="XC{=dhDs;A!7qyb4=n,/">c</field></block></value></block></next></block></next></block></statement><statement name="module_statements_input"><block type="variables_set" id="3zT7:z1C0dO[+LoV_2JW"><field name="VAR" id="XC{=dhDs;A!7qyb4=n,/">c</field><value name="VALUE"><block type="math_arithmetic" id="$2hi0bJ|a/6E)o[1/q5r"><field name="OP">ADD</field><value name="A"><block type="variables_name_get" id="D7Xz6Rt%VUP,[^cM[lt8"><field name="VAR" id="[}OtT\`3FPRJXz06kV[\`W">x</field></block></value><value name="B"><block type="variables_name_get" id="\`|]i,dxjq3]Oj%qZ.EkA"><field name="VAR" id="FMKQqe?GDrT]U|ejp5FW">y</field></block></value></block></value></block></statement></block></xml>`
     sendXmlToWorkspace(adderBasicXml, false, "Adder.xml")
 }
+
+export function aluExample() {
+    const aluXml = `<xml xmlns="https://developers.google.com/blockly/xml">
+  <variables>
+    <variable id="0V@vIZJuVpeV\`=~|_7PB">zNoRing</variable>
+    <variable id="*@%~6PzRg5xtJCKH3QK@">k</variable>
+    <variable id="%leq=9Q#1$x0U!rgkY/;">z</variable>
+    <variable id="H(=q|NUaid08?N|\`El7*">x</variable>
+    <variable id="*e\`)H~3|q_m{N,g_{p2M">ZF</variable>
+    <variable id="E2raHhq)/La4hiUIxT:7">y</variable>
+    <variable id="ag(idP9Z-HRf9l1\`kRB5">BAF</variable>
+    <variable id="Z3w.[6:~~b@ayYODazRN">op</variable>
+    <variable id="@L*+Q*u7m}!edn%YUB|#">IOF</variable>
+  </variables>
+  <block type="module_block_module_begin" id="/A*awNmnm*U]=7)Sp4n-" x="-962" y="188">
+    <field name="moduleName">ALU</field>
+    <statement name="module_parameters_input">
+      <block type="comment_block" id="|%u_t)$Ha[@6fri}]ys8">
+        <field name="comment">x, y, z, zCOPY registers</field>
+        <next>
+          <block type="variable_declaration_block_4" id="Mq]~tj(Hk.rIG!s%AxRX">
+            <field name="variable_in_out_type">IN</field>
+            <field name="variable_type">BIT</field>
+            <value name="variable_in_out">
+              <block type="variables_name_get" id="zC2^sVV+?zrFA.Y^--Zr">
+                <field name="VAR" id="H(=q|NUaid08?N|\`El7*">x</field>
+              </block>
+            </value>
+            <value name="bit_variable">
+              <block type="math_number" id="8swM~L{L/^SGzebp2nkh">
+                <field name="NUM">6</field>
+              </block>
+            </value>
+            <next>
+              <block type="variable_declaration_block_4" id="cCde}BN(kdfX-?6V{6gN">
+                <field name="variable_in_out_type">IN</field>
+                <field name="variable_type">BIT</field>
+                <value name="variable_in_out">
+                  <block type="variables_name_get" id="2VE!P06[R.VJtw=B4^d4">
+                    <field name="VAR" id="E2raHhq)/La4hiUIxT:7">y</field>
+                  </block>
+                </value>
+                <value name="bit_variable">
+                  <block type="math_number" id="5EQ;cgv:i/QKu(!buLt;">
+                    <field name="NUM">6</field>
+                  </block>
+                </value>
+                <next>
+                  <block type="variable_declaration_block_4" id="c;ff|)(8}sW::*8.tc6#">
+                    <field name="variable_in_out_type">OUT</field>
+                    <field name="variable_type">BIT</field>
+                    <value name="variable_in_out">
+                      <block type="variables_name_get" id="v%9}.$2|a|JYATc{=Kx\`">
+                        <field name="VAR" id="%leq=9Q#1$x0U!rgkY/;">z</field>
+                      </block>
+                    </value>
+                    <value name="bit_variable">
+                      <block type="math_number" id="kb0yCI(f0$9?r)43l;9-">
+                        <field name="NUM">6</field>
+                      </block>
+                    </value>
+                    <next>
+                      <block type="variable_declaration_block_4" id="kV_7VLCs;BEL4w]c5IrB">
+                        <field name="variable_in_out_type">OUT</field>
+                        <field name="variable_type">BIT</field>
+                        <value name="variable_in_out">
+                          <block type="variables_name_get" id="}/V=+Gq+KUcr!0lELbX}">
+                            <field name="VAR" id="0V@vIZJuVpeV\`=~|_7PB">zNoRing</field>
+                          </block>
+                        </value>
+                        <value name="bit_variable">
+                          <block type="math_number" id=",56!0jFh=TAz/aBR\`Zl7">
+                            <field name="NUM">6</field>
+                          </block>
+                        </value>
+                        <next>
+                          <block type="comment_block" id="\`UMpX~aQ5EskO{c*epU.">
+                            <field name="comment">operation code</field>
+                            <next>
+                              <block type="variable_declaration_block_4" id="rQIZieI13lWSBm5u_iOK">
+                                <field name="variable_in_out_type">IN</field>
+                                <field name="variable_type">BIT</field>
+                                <value name="variable_in_out">
+                                  <block type="variables_name_get" id="pTTpj|9JVRbL#UocAt@7">
+                                    <field name="VAR" id="Z3w.[6:~~b@ayYODazRN">op</field>
+                                  </block>
+                                </value>
+                                <value name="bit_variable">
+                                  <block type="math_number" id="D2;E]1C;j,3IK/6Y/K]p">
+                                    <field name="NUM">4</field>
+                                  </block>
+                                </value>
+                                <next>
+                                  <block type="comment_block" id=".8k.ez*bQGJ4csUa@8#u">
+                                    <field name="comment">flags</field>
+                                    <next>
+                                      <block type="variable_declaration_block_4" id=":3rw;Bn3mE_4=D[dsTPw">
+                                        <field name="variable_in_out_type">OUT</field>
+                                        <field name="variable_type">BIT</field>
+                                        <value name="variable_in_out">
+                                          <block type="variables_name_get" id=":X!EO|Fhc^6/|D9E|xoe">
+                                            <field name="VAR" id="ag(idP9Z-HRf9l1\`kRB5">BAF</field>
+                                          </block>
+                                        </value>
+                                        <value name="bit_variable">
+                                          <block type="math_number" id="+c0Jl/Rv-^v=lerN359x">
+                                            <field name="NUM">1</field>
+                                          </block>
+                                        </value>
+                                        <next>
+                                          <block type="variable_declaration_block_4" id="a;BNmdcmT:,8+H4Cto{U">
+                                            <field name="variable_in_out_type">OUT</field>
+                                            <field name="variable_type">BIT</field>
+                                            <value name="variable_in_out">
+                                              <block type="variables_name_get" id="2LWJ2H=Ly=LUig-Rx6:@">
+                                                <field name="VAR" id="@L*+Q*u7m}!edn%YUB|#">IOF</field>
+                                              </block>
+                                            </value>
+                                            <value name="bit_variable">
+                                              <block type="math_number" id="=(0{:!F=oTj~a9\`0CdPC">
+                                                <field name="NUM">1</field>
+                                              </block>
+                                            </value>
+                                            <next>
+                                              <block type="variable_declaration_block_4" id="OcvNn)?IZlr3W]!BNDj%">
+                                                <field name="variable_in_out_type">OUT</field>
+                                                <field name="variable_type">BIT</field>
+                                                <value name="variable_in_out">
+                                                  <block type="variables_name_get" id="|I!V%6H_3Il@LQN^\`owJ">
+                                                    <field name="VAR" id="*e\`)H~3|q_m{N,g_{p2M">ZF</field>
+                                                  </block>
+                                                </value>
+                                                <value name="bit_variable">
+                                                  <block type="math_number" id="C)4UsV,pJ(rf~]L#z8r-">
+                                                    <field name="NUM">1</field>
+                                                  </block>
+                                                </value>
+                                              </block>
+                                            </next>
+                                          </block>
+                                        </next>
+                                      </block>
+                                    </next>
+                                  </block>
+                                </next>
+                              </block>
+                            </next>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+    <statement name="module_declaration_input">
+      <block type="constant_declaration_block" id="~eTK9+uc+2L2VsY~ij{Q">
+        <field name="const">CONST</field>
+        <field name="variable" id="*@%~6PzRg5xtJCKH3QK@">k</field>
+        <value name="variable_value">
+          <block type="math_number" id="8w=61oQe\`!.~-GoW3(!M">
+            <field name="NUM">32</field>
+          </block>
+        </value>
+      </block>
+    </statement>
+    <statement name="module_statements_input">
+      <block type="variables_set" id="baErHT!bT4Wl}la)]?,!">
+        <field name="VAR" id="0V@vIZJuVpeV\`=~|_7PB">zNoRing</field>
+        <value name="VALUE">
+          <block type="variables_name_get" id="5C-/z#O*!MHWjaARiMZT">
+            <field name="VAR" id="%leq=9Q#1$x0U!rgkY/;">z</field>
+          </block>
+        </value>
+        <next>
+          <block type="variables_set" id="LmU1E4S8dYoT2vazf6{{">
+            <field name="VAR" id="0V@vIZJuVpeV\`=~|_7PB">zNoRing</field>
+            <value name="VALUE">
+              <block type="if_statement" id="FNW,pglW9y(MDSp!b8(@">
+                <value name="if_value">
+                  <block type="two_variables_dot" id="1U7c(H\`)/lT%N1L9[gdb">
+                    <value name="var1">
+                      <block type="variables_name_get" id="X1/1ZyhOW@tq\`8jJrQ#z">
+                        <field name="VAR" id="Z3w.[6:~~b@ayYODazRN">op</field>
+                      </block>
+                    </value>
+                    <value name="var2">
+                      <block type="math_number" id="]ocdKzm/st~EQ(5X1PCP">
+                        <field name="NUM">3</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+                <value name="then_value">
+                  <block type="if_statement" id="(mDjjt/n/Yh!0@7;:9PJ">
+                    <value name="if_value">
+                      <block type="two_variables_dot" id="gw.A{8F\`V+^TKY_*ipa*">
+                        <value name="var1">
+                          <block type="variables_name_get" id="~*SdZ5s|UbSM+nD]@hHL">
+                            <field name="VAR" id="Z3w.[6:~~b@ayYODazRN">op</field>
+                          </block>
+                        </value>
+                        <value name="var2">
+                          <block type="math_number" id="PWX8p2uC7um@#2/WL]~8">
+                            <field name="NUM">2</field>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                    <value name="then_value">
+                      <block type="brackets_block" id="M,J3NOVU8C\`Qd\`IeR2[l">
+                        <field name="bracketsLeft">normalLeft</field>
+                        <field name="bracketsRight">normalRight</field>
+                        <value name="variableInside">
+                          <block type="if_statement" id="@:RIg*_4=7ZH5#H^R#54">
+                            <value name="if_value">
+                              <block type="two_variables_dot" id="3{@jHKm?aRi^$%{mg1ja">
+                                <value name="var1">
+                                  <block type="variables_name_get" id="l\`\`{LQDPgFcFJBiHWad~">
+                                    <field name="VAR" id="Z3w.[6:~~b@ayYODazRN">op</field>
+                                  </block>
+                                </value>
+                                <value name="var2">
+                                  <block type="math_number" id="OGDeDHc0-|TJ7Jx6~HNw">
+                                    <field name="NUM">1</field>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                            <value name="then_value">
+                              <block type="brackets_block" id="(e%N}Ih}u6[KSW#I16QN">
+                                <field name="bracketsLeft">normalLeft</field>
+                                <field name="bracketsRight">normalRight</field>
+                                <value name="variableInside">
+                                  <block type="if_statement" id="N=z{vcHi,aM,fpPaZ$Od">
+                                    <value name="if_value">
+                                      <block type="two_variables_dot" id="nsj-ycMnNVas_@\`n=hVe">
+                                        <value name="var1">
+                                          <block type="variables_name_get" id="bGqV[=_FLNZ8c/UsC\`!m">
+                                            <field name="VAR" id="Z3w.[6:~~b@ayYODazRN">op</field>
+                                          </block>
+                                        </value>
+                                        <value name="var2">
+                                          <block type="math_number" id="8o~l?[1;x0W%2?s2M7RL">
+                                            <field name="NUM">0</field>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                    <value name="then_value">
+                                      <block type="math_arithmetic" id="AJ]=nXAttlplP#%Zt0c]">
+                                        <field name="OP">STATEMENT5</field>
+                                        <comment pinned="false" h="54" w="94">OR command
+1111
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                        
+                                        </comment>
+                                        <value name="A">
+                                          <block type="variables_name_get" id="\`I78}}sGRVE)%2vF{umT">
+                                            <field name="VAR" id="H(=q|NUaid08?N|\`El7*">x</field>
+                                          </block>
+                                        </value>
+                                        <value name="B">
+                                          <block type="variables_name_get" id="+eu_/~az:OMX(@d|@\`/H">
+                                            <field name="VAR" id="E2raHhq)/La4hiUIxT:7">y</field>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                    <value name="else_value">
+                                      <block type="math_arithmetic" id=":(j_tKkp)eDX1_z@.XDa">
+                                        <field name="OP">STATEMENT1</field>
+                                        <comment pinned="false" h="52" w="103">AND command
+1110
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                        
+                                        </comment>
+                                        <value name="A">
+                                          <block type="variables_name_get" id="z-eP7|^n3@y7,5!2\`_:;">
+                                            <field name="VAR" id="H(=q|NUaid08?N|\`El7*">x</field>
+                                          </block>
+                                        </value>
+                                        <value name="B">
+                                          <block type="variables_name_get" id="u0_m7cVEVBT36]83dJRz">
+                                            <field name="VAR" id="E2raHhq)/La4hiUIxT:7">y</field>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                            <value name="else_value">
+                              <block type="brackets_block" id="IoWCqAy%^TNR_!Z(u#w_">
+                                <field name="bracketsLeft">normalLeft</field>
+                                <field name="bracketsRight">normalRight</field>
+                                <value name="variableInside">
+                                  <block type="if_statement" id="#~u)rHXe!ue@_r1(}A.=">
+                                    <value name="if_value">
+                                      <block type="two_variables_dot" id="^NZw$qf}?Z#X\`5wbERmc">
+                                        <value name="var1">
+                                          <block type="variables_name_get" id="?ngKD\`b3Q2wLNTy656=e">
+                                            <field name="VAR" id="Z3w.[6:~~b@ayYODazRN">op</field>
+                                          </block>
+                                        </value>
+                                        <value name="var2">
+                                          <block type="math_number" id="(_:V6v-y*}@I%{\`2K+Wh">
+                                            <field name="NUM">0</field>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                    <value name="then_value">
+                                      <block type="math_arithmetic" id="pKwNWR3+zpY@Ys$1~4|m">
+                                        <field name="OP">POWER</field>
+                                        <comment pinned="false" h="55" w="109">XOR command
+1101
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                        
+                                        </comment>
+                                        <value name="A">
+                                          <block type="variables_name_get" id="]n-1IA1enZJ1;f=L/,bC">
+                                            <field name="VAR" id="H(=q|NUaid08?N|\`El7*">x</field>
+                                          </block>
+                                        </value>
+                                        <value name="B">
+                                          <block type="variables_name_get" id="VTUw2[p_,a%{QPTCM6~J">
+                                            <field name="VAR" id="E2raHhq)/La4hiUIxT:7">y</field>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                    <value name="else_value">
+                                      <block type="math_arithmetic" id="#jW%7hXLmuNX2ZE[vU2+">
+                                        <field name="OP">STATEMENT5</field>
+                                        <comment pinned="false" h="56" w="85">NOT USED
+1100
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                        
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                        
+                                        </comment>
+                                        <value name="A">
+                                          <block type="negative_variable" id="\`Oq%0;{bP}oFl60{GjWJ">
+                                            <value name="variable_name">
+                                              <block type="variables_name_get" id="bc$J=E}M-qI-o|nL7Lf@">
+                                                <field name="VAR" id="H(=q|NUaid08?N|\`El7*">x</field>
+                                              </block>
+                                            </value>
+                                          </block>
+                                        </value>
+                                        <value name="B">
+                                          <block type="negative_variable" id="nd_S(bPB,6NY%|3}]Fx?">
+                                            <value name="variable_name">
+                                              <block type="variables_name_get" id="U$06-k4jF?3Gg$1%vxOn">
+                                                <field name="VAR" id="E2raHhq)/La4hiUIxT:7">y</field>
+                                              </block>
+                                            </value>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                    <value name="else_value">
+                      <block type="brackets_block" id="81E@dWzT^~@W5UAqqkeE">
+                        <field name="bracketsLeft">normalLeft</field>
+                        <field name="bracketsRight">normalRight</field>
+                        <value name="variableInside">
+                          <block type="if_statement" id="4i*]mA^Sjhd0xM+sjU@I">
+                            <value name="if_value">
+                              <block type="two_variables_dot" id="/[cTW9r2Imw/;GGYG-s}">
+                                <value name="var1">
+                                  <block type="variables_name_get" id="Op#~/.vy6{]b|7n-rDl\`">
+                                    <field name="VAR" id="Z3w.[6:~~b@ayYODazRN">op</field>
+                                  </block>
+                                </value>
+                                <value name="var2">
+                                  <block type="math_number" id="e?XWG^N07iZLsSI[~o+@">
+                                    <field name="NUM">1</field>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                            <value name="then_value">
+                              <block type="brackets_block" id="d\`ZIx4EY/za=X*R[Ae*z">
+                                <field name="bracketsLeft">normalLeft</field>
+                                <field name="bracketsRight">normalRight</field>
+                                <value name="variableInside">
+                                  <block type="if_statement" id="Mwh6iRVUssuEqkg{}wfo">
+                                    <value name="if_value">
+                                      <block type="two_variables_dot" id="AxgDmq~Str#fYcG^Xhga">
+                                        <value name="var1">
+                                          <block type="variables_name_get" id="/7T?zT*%Nu;2rE]RDH:B">
+                                            <field name="VAR" id="Z3w.[6:~~b@ayYODazRN">op</field>
+                                          </block>
+                                        </value>
+                                        <value name="var2">
+                                          <block type="math_number" id="3*%m;D\`d{eJO[67*On$t">
+                                            <field name="NUM">0</field>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                    <value name="then_value">
+                                      <block type="math_arithmetic" id="=~juLfPUrW\`^8+1R$X6j">
+                                        <field name="OP">MINUS</field>
+                                        <comment pinned="false" h="57" w="125">SUB command
+1011
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                        
+                                        </comment>
+                                        <value name="A">
+                                          <block type="variables_name_get" id="be:s~#F|E%)9i0VY:W-@">
+                                            <field name="VAR" id="H(=q|NUaid08?N|\`El7*">x</field>
+                                          </block>
+                                        </value>
+                                        <value name="B">
+                                          <block type="variables_name_get" id="=96[d.8LQNCBZ7|#,jp!">
+                                            <field name="VAR" id="E2raHhq)/La4hiUIxT:7">y</field>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                    <value name="else_value">
+                                      <block type="math_arithmetic" id="/v2I2,Mr$U;|tQ-:n#zc">
+                                        <field name="OP">ADD</field>
+                                        <comment pinned="false" h="59" w="114">ADD command
+1010
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                        
+                                        </comment>
+                                        <value name="A">
+                                          <block type="variables_name_get" id=",4\`yBw9+9)QZYp_wY_Ar">
+                                            <field name="VAR" id="H(=q|NUaid08?N|\`El7*">x</field>
+                                          </block>
+                                        </value>
+                                        <value name="B">
+                                          <block type="variables_name_get" id="E]Tu3_jGEV\`@G*@*]!\`=">
+                                            <field name="VAR" id="E2raHhq)/La4hiUIxT:7">y</field>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                            <value name="else_value">
+                              <block type="brackets_block" id="pCM7.NOFL40Q-\`oAGet9">
+                                <field name="bracketsLeft">normalLeft</field>
+                                <field name="bracketsRight">normalRight</field>
+                                <value name="variableInside">
+                                  <block type="if_statement" id="X+T65GIktLPemzp:mW;+">
+                                    <value name="if_value">
+                                      <block type="two_variables_dot" id="YtI-02]L~m3^h;meel1J">
+                                        <value name="var1">
+                                          <block type="variables_name_get" id="|N4rMZA0/G?rGZVUSV9;">
+                                            <field name="VAR" id="Z3w.[6:~~b@ayYODazRN">op</field>
+                                          </block>
+                                        </value>
+                                        <value name="var2">
+                                          <block type="math_number" id="Xr.G\`SeTzfW(z8iL1l:d">
+                                            <field name="NUM">0</field>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                    <value name="then_value">
+                                      <block type="math_arithmetic" id="m(7/Z\`EvD,1|i9=vP}jk">
+                                        <field name="OP">MINUS</field>
+                                        <comment pinned="false" h="63" w="110">DEC command
+1001
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                        
+                                        </comment>
+                                        <value name="A">
+                                          <block type="variables_name_get" id="FHv\`cIH9%wg!~N/A*-.M">
+                                            <field name="VAR" id="H(=q|NUaid08?N|\`El7*">x</field>
+                                          </block>
+                                        </value>
+                                        <value name="B">
+                                          <block type="math_number" id="6e.*HT3]tMN)g4qDXS#/">
+                                            <field name="NUM">1</field>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                    <value name="else_value">
+                                      <block type="math_arithmetic" id="*^ule3v#p(3.6B$qnzsy">
+                                        <field name="OP">ADD</field>
+                                        <comment pinned="false" h="58" w="107">INC command
+1000
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                        
+                                        </comment>
+                                        <value name="A">
+                                          <block type="variables_name_get" id="/io+mYZ|-}6D7*jMU;w#">
+                                            <field name="VAR" id="H(=q|NUaid08?N|\`El7*">x</field>
+                                          </block>
+                                        </value>
+                                        <value name="B">
+                                          <block type="math_number" id="Jgh-Sy5gK5U%CLj#JJQf">
+                                            <field name="NUM">1</field>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+                <value name="else_value">
+                  <block type="if_statement" id="X;I$0O+}Kho(ScdB0DyS">
+                    <value name="if_value">
+                      <block type="two_variables_dot" id="oAL6TpEwh~^R3S;cuR$u">
+                        <value name="var1">
+                          <block type="variables_name_get" id="ck8waAF$3|Jst(:Zf7!.">
+                            <field name="VAR" id="Z3w.[6:~~b@ayYODazRN">op</field>
+                          </block>
+                        </value>
+                        <value name="var2">
+                          <block type="math_number" id=".#6L]C)=wrtLX[kSXfY8">
+                            <field name="NUM">2</field>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                    <value name="then_value">
+                      <block type="brackets_block" id="@Lp@p:9wBXT^7{oOi:$U">
+                        <field name="bracketsLeft">normalLeft</field>
+                        <field name="bracketsRight">normalRight</field>
+                        <value name="variableInside">
+                          <block type="if_statement" id="%@M9fnFRuM#JgeTkWq!F">
+                            <value name="if_value">
+                              <block type="two_variables_dot" id="vg3XX[hcuZ}!!rHFsJ0|">
+                                <value name="var1">
+                                  <block type="variables_name_get" id="tNA8v\`I.FBU(pnKUYQzN">
+                                    <field name="VAR" id="Z3w.[6:~~b@ayYODazRN">op</field>
+                                  </block>
+                                </value>
+                                <value name="var2">
+                                  <block type="math_number" id="p67L+4BS=s/8Z*QmBWnc">
+                                    <field name="NUM">1</field>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                            <value name="then_value">
+                              <block type="brackets_block" id="j-?:[@[Cl+;9)?jN}v2r">
+                                <field name="bracketsLeft">normalLeft</field>
+                                <field name="bracketsRight">normalRight</field>
+                                <value name="variableInside">
+                                  <block type="if_statement" id="UOZp{pwH\`y}bAq/9ogdw">
+                                    <value name="if_value">
+                                      <block type="two_variables_dot" id="}\`(]d/oG;ypF04$_yZA5">
+                                        <value name="var1">
+                                          <block type="variables_name_get" id="m!Vxx3*$684hGAZ[Vg0d">
+                                            <field name="VAR" id="Z3w.[6:~~b@ayYODazRN">op</field>
+                                          </block>
+                                        </value>
+                                        <value name="var2">
+                                          <block type="math_number" id="+s=.MXFj.W$7diP_6%#$">
+                                            <field name="NUM">0</field>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                    <value name="then_value">
+                                      <block type="math_arithmetic" id="RX$GO1_W$wk]139%O1*.">
+                                        <field name="OP">STATEMENT9</field>
+                                        <comment pinned="false" h="64" w="152">SHIFT LEFT command
+0111
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                        
+                                        </comment>
+                                        <value name="A">
+                                          <block type="variables_name_get" id="xXTVbMo/}:Z/GdPw{~/_">
+                                            <field name="VAR" id="H(=q|NUaid08?N|\`El7*">x</field>
+                                          </block>
+                                        </value>
+                                        <value name="B">
+                                          <block type="variables_name_get" id="1:%y*W7_Uy^0dek4:zhf">
+                                            <field name="VAR" id="E2raHhq)/La4hiUIxT:7">y</field>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                    <value name="else_value">
+                                      <block type="math_arithmetic" id="[f*irVVyo3(h3JUiA*G2">
+                                        <field name="OP">STATEMENT8</field>
+                                        <comment pinned="false" h="63" w="159">SHIFT RIGHT command
+0110
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                        
+                                        </comment>
+                                        <value name="A">
+                                          <block type="variables_name_get" id="vMLiCmr}1;S$*^Ff#DJR">
+                                            <field name="VAR" id="H(=q|NUaid08?N|\`El7*">x</field>
+                                          </block>
+                                        </value>
+                                        <value name="B">
+                                          <block type="variables_name_get" id="lb;GL}-7TMv8w*:[^/,S">
+                                            <field name="VAR" id="E2raHhq)/La4hiUIxT:7">y</field>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                            <value name="else_value">
+                              <block type="brackets_block" id="!(OOaNE*1cX]:0?%2v3E">
+                                <field name="bracketsLeft">normalLeft</field>
+                                <field name="bracketsRight">normalRight</field>
+                                <value name="variableInside">
+                                  <block type="if_statement" id="}JOB]1-s*OT*LcwH}EJ*">
+                                    <value name="if_value">
+                                      <block type="two_variables_dot" id="o0lX+6LPwG5W;}bab5Q-">
+                                        <value name="var1">
+                                          <block type="variables_name_get" id="vQ$Nktah9_wRKi0uNmLG">
+                                            <field name="VAR" id="Z3w.[6:~~b@ayYODazRN">op</field>
+                                          </block>
+                                        </value>
+                                        <value name="var2">
+                                          <block type="math_number" id="[E|VcwL7vTQ)L@a|cLnq">
+                                            <field name="NUM">0</field>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                    <value name="then_value">
+                                      <block type="math_arithmetic" id="P[Z$.V|2Hzc4968fF1@=">
+                                        <field name="OP">STATEMENT7</field>
+                                        <comment pinned="false" h="65" w="148">ROLL LEFT command
+0101
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                        
+                                        </comment>
+                                        <value name="A">
+                                          <block type="variables_name_get" id="Q}2:klYE}A|!c_h$Sl9}">
+                                            <field name="VAR" id="H(=q|NUaid08?N|\`El7*">x</field>
+                                          </block>
+                                        </value>
+                                        <value name="B">
+                                          <block type="variables_name_get" id="=LH,D\`$y$6mIH~Cm,ZME">
+                                            <field name="VAR" id="E2raHhq)/La4hiUIxT:7">y</field>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                    <value name="else_value">
+                                      <block type="math_arithmetic" id="ztw@1dT~e_#^;fb5=HaE">
+                                        <field name="OP">STATEMENT6</field>
+                                        <comment pinned="false" h="63" w="165">ROLL RIGHT command
+0100
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                        
+                                        </comment>
+                                        <value name="A">
+                                          <block type="variables_name_get" id="8o9kWek$%HD{B)Y~ng$R">
+                                            <field name="VAR" id="H(=q|NUaid08?N|\`El7*">x</field>
+                                          </block>
+                                        </value>
+                                        <value name="B">
+                                          <block type="variables_name_get" id=";53^=+1!RbStc++xN%C3">
+                                            <field name="VAR" id="E2raHhq)/La4hiUIxT:7">y</field>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                    <value name="else_value">
+                      <block type="brackets_block" id="Sx9I{pW{p3VYM.,Ykbk]">
+                        <field name="bracketsLeft">normalLeft</field>
+                        <field name="bracketsRight">normalRight</field>
+                        <value name="variableInside">
+                          <block type="if_statement" id="t!WG/9|~KE}c(oKm!iQS">
+                            <value name="if_value">
+                              <block type="two_variables_dot" id="iqGxNZXvG.B,{b%GzY,Y">
+                                <value name="var1">
+                                  <block type="variables_name_get" id="0Q=J:*p~B:sinp:vjZ09">
+                                    <field name="VAR" id="Z3w.[6:~~b@ayYODazRN">op</field>
+                                  </block>
+                                </value>
+                                <value name="var2">
+                                  <block type="math_number" id="fv#|]c-x2*Sq}?-%(aAt">
+                                    <field name="NUM">1</field>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                            <value name="then_value">
+                              <block type="brackets_block" id="CN(B2T%W:de_G/9q6*nU">
+                                <field name="bracketsLeft">normalLeft</field>
+                                <field name="bracketsRight">normalRight</field>
+                                <value name="variableInside">
+                                  <block type="if_statement" id="W@trhx}tS,6(U@G[1Y*a">
+                                    <value name="if_value">
+                                      <block type="two_variables_dot" id="-vcwRKr/5Me/jV35g;#2">
+                                        <value name="var1">
+                                          <block type="variables_name_get" id="4mhP%r16}$sm[pqk,J~*">
+                                            <field name="VAR" id="Z3w.[6:~~b@ayYODazRN">op</field>
+                                          </block>
+                                        </value>
+                                        <value name="var2">
+                                          <block type="math_number" id="},aY|^6Ga}-u5~]y(iyy">
+                                            <field name="NUM">0</field>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                    <value name="then_value">
+                                      <block type="math_arithmetic" id="S?|nfscU;NDp4Xed;MpI">
+                                        <field name="OP">STATEMENT2</field>
+                                        <comment pinned="false" h="56" w="160">N0 (0 bit sum) cmd
+0010
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                        
+                                        </comment>
+                                        <value name="A">
+                                          <block type="variables_name_get" id="]Wr-zUB$-!WD#p%3Xauy">
+                                            <field name="VAR" id="H(=q|NUaid08?N|\`El7*">x</field>
+                                          </block>
+                                        </value>
+                                        <value name="B">
+                                          <block type="variables_name_get" id="e,o8mr8+AFYYVzH)li}N">
+                                            <field name="VAR" id="E2raHhq)/La4hiUIxT:7">y</field>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                    <value name="else_value">
+                                      <block type="math_arithmetic" id="#vs_F~*;F{vPK8pT},K1">
+                                        <field name="OP">STATEMENT4</field>
+                                        <comment pinned="false" h="56" w="160">N0 (0 bit sum) cmd
+0010
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                        
+                                        </comment>
+                                        <value name="A">
+                                          <block type="variables_name_get" id="Bp$iiOw9n1)5QshzfMc,">
+                                            <field name="VAR" id="H(=q|NUaid08?N|\`El7*">x</field>
+                                          </block>
+                                        </value>
+                                        <value name="B">
+                                          <block type="variables_name_get" id="_O(:|qeb0ij.SMhjm=:p">
+                                            <field name="VAR" id="E2raHhq)/La4hiUIxT:7">y</field>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                            <value name="else_value">
+                              <block type="brackets_block" id="h~Q;EI;PY|iMNnZnX|0t">
+                                <field name="bracketsLeft">normalLeft</field>
+                                <field name="bracketsRight">normalRight</field>
+                                <value name="variableInside">
+                                  <block type="if_statement" id="P:bt?awMkyVHj$SSx+3%">
+                                    <value name="if_value">
+                                      <block type="two_variables_dot" id="W5fLJA:W7-/!5[i7.a=V">
+                                        <value name="var1">
+                                          <block type="variables_name_get" id="Ua8/8C.iiZwh#/OEjp=g">
+                                            <field name="VAR" id="Z3w.[6:~~b@ayYODazRN">op</field>
+                                          </block>
+                                        </value>
+                                        <value name="var2">
+                                          <block type="math_number" id="0Z$4g@;-_pSA^iL:;0KH">
+                                            <field name="NUM">0</field>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                    <value name="then_value">
+                                      <block type="math_number" id="jwGARFA=1ba7*jBisR[J">
+                                        <field name="NUM">0</field>
+                                      </block>
+                                    </value>
+                                    <value name="else_value">
+                                      <block type="negative_variable" id="rT7ow=qx(ExXP4]t6AU-">
+                                        <value name="variable_name">
+                                          <block type="variables_name_get" id="d;iQ=3,nKf)x!zdh2,%E">
+                                            <field name="VAR" id="H(=q|NUaid08?N|\`El7*">x</field>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <next>
+              <block type="variables_set" id="O[DnhFHE:;{P1gFT4(1w">
+                <field name="VAR" id="*e\`)H~3|q_m{N,g_{p2M">ZF</field>
+                <value name="VALUE">
+                  <block type="if_statement" id="?oA!Nr(j;V@J3Ld/QSl!" inline="true">
+                    <value name="if_value">
+                      <block type="math_arithmetic" id="a5T:,sh_f)}(b/)D?Btw">
+                        <field name="OP">STATEMENT4</field>
+                        <value name="A">
+                          <block type="variables_name_get" id="0}3E1l0xc?dc-^VaDHeC">
+                            <field name="VAR" id="0V@vIZJuVpeV\`=~|_7PB">zNoRing</field>
+                          </block>
+                        </value>
+                        <value name="B">
+                          <block type="math_number" id="Iw12xGR_pVx?pRbm2vgY">
+                            <field name="NUM">0</field>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                    <value name="then_value">
+                      <block type="math_number" id="}__YhfU]+8vOn:f@3x?q">
+                        <field name="NUM">1</field>
+                      </block>
+                    </value>
+                    <value name="else_value">
+                      <block type="math_number" id="%6or=1]VHzvlRLV5nBLJ">
+                        <field name="NUM">0</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+                <next>
+                  <block type="variables_set" id="o8%6D_Z@c~xnPW=1pZXJ">
+                    <field name="VAR" id="ag(idP9Z-HRf9l1\`kRB5">BAF</field>
+                    <value name="VALUE">
+                      <block type="if_statement" id="0P[Xcs3D=C?XgNHSh^|)" inline="true">
+                        <value name="if_value">
+                          <block type="math_arithmetic" id="lEIumqbE#-]A,A68!j4^">
+                            <field name="OP">STATEMENT7</field>
+                            <value name="A">
+                              <block type="variables_name_get" id="xAN0;7~hlbfxJ=,pSk]J">
+                                <field name="VAR" id="H(=q|NUaid08?N|\`El7*">x</field>
+                              </block>
+                            </value>
+                            <value name="B">
+                              <block type="variables_name_get" id=";p}KLb+owF8^SlVGcq*]">
+                                <field name="VAR" id="*@%~6PzRg5xtJCKH3QK@">k</field>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                        <value name="then_value">
+                          <block type="math_number" id="%Y#%_qNE{GW#1#rbgr|O">
+                            <field name="NUM">1</field>
+                          </block>
+                        </value>
+                        <value name="else_value">
+                          <block type="if_statement" id="CuQI9_Bk3r7NLSe@OCi%" inline="true">
+                            <value name="if_value">
+                              <block type="math_arithmetic" id="$6)mW}m8p~uV?qB(;k%(">
+                                <field name="OP">STATEMENT7</field>
+                                <value name="A">
+                                  <block type="variables_name_get" id="{$F*/G{RK6UO^CC#gr}t">
+                                    <field name="VAR" id="E2raHhq)/La4hiUIxT:7">y</field>
+                                  </block>
+                                </value>
+                                <value name="B">
+                                  <block type="variables_name_get" id="[qUt[Dk3t[UP$NAD|*CO">
+                                    <field name="VAR" id="*@%~6PzRg5xtJCKH3QK@">k</field>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                            <value name="then_value">
+                              <block type="math_number" id="tUfZPT#us/cR-HokwE5L">
+                                <field name="NUM">1</field>
+                              </block>
+                            </value>
+                            <value name="else_value">
+                              <block type="math_number" id="Zd!*%=yH[/lT\`rO7l8_1">
+                                <field name="NUM">0</field>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                    <next>
+                      <block type="variables_set" id="7L:3w,K:0w/b+voMt]S;">
+                        <field name="VAR" id="@L*+Q*u7m}!edn%YUB|#">IOF</field>
+                        <value name="VALUE">
+                          <block type="if_statement" id="%=[trMh]_]gZu=Yf,4kX" inline="true">
+                            <value name="if_value">
+                              <block type="math_arithmetic" id="6,IBCfeFLsm.}HNt-n)d">
+                                <field name="OP">STATEMENT4</field>
+                                <value name="A">
+                                  <block type="variables_name_get" id="cuw!/ibb0S$wJj=bd~Tr">
+                                    <field name="VAR" id="Z3w.[6:~~b@ayYODazRN">op</field>
+                                  </block>
+                                </value>
+                                <value name="B">
+                                  <block type="math_number" id="n^hCf?rpv_iHa5LOS2;z">
+                                    <field name="NUM">1</field>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                            <value name="then_value">
+                              <block type="math_number" id=".H_7$*UZtR3Cs]~I(u91">
+                                <field name="NUM">1</field>
+                              </block>
+                            </value>
+                            <value name="else_value">
+                              <block type="math_number" id="cC\`aH]o;GO6oKAFb/tOH">
+                                <field name="NUM">0</field>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                        <next>
+                          <block type="variables_set" id="xsSj14UXYJma8e}Da);X">
+                            <field name="VAR" id="%leq=9Q#1$x0U!rgkY/;">z</field>
+                            <value name="VALUE">
+                              <block type="if_statement" id="-sS_RahI[a0nX;BaiCA}" inline="true">
+                                <value name="if_value">
+                                  <block type="math_arithmetic" id="\`O@WSFCAr60Olo-n_8lY">
+                                    <field name="OP">STATEMENT7</field>
+                                    <value name="A">
+                                      <block type="variables_name_get" id="*dkdWo2bni/qYXFgzP,H">
+                                        <field name="VAR" id="0V@vIZJuVpeV\`=~|_7PB">zNoRing</field>
+                                      </block>
+                                    </value>
+                                    <value name="B">
+                                      <block type="variables_name_get" id="j);dc)opBLFVY%aH~J8L">
+                                        <field name="VAR" id="*@%~6PzRg5xtJCKH3QK@">k</field>
+                                      </block>
+                                    </value>
+                                  </block>
+                                </value>
+                                <value name="then_value">
+                                  <block type="math_arithmetic" id="A.s~fgrFscZ6-/w+#3S^">
+                                    <field name="OP">MINUS</field>
+                                    <value name="A">
+                                      <block type="variables_name_get" id="a_95BpN+nM,0UB-e#;i]">
+                                        <field name="VAR" id="0V@vIZJuVpeV\`=~|_7PB">zNoRing</field>
+                                      </block>
+                                    </value>
+                                    <value name="B">
+                                      <block type="variables_name_get" id="o_4DhT5hjvz4*JdIC;\`,">
+                                        <field name="VAR" id="*@%~6PzRg5xtJCKH3QK@">k</field>
+                                      </block>
+                                    </value>
+                                  </block>
+                                </value>
+                                <value name="else_value">
+                                  <block type="variables_name_get" id="\`ov$Si$i]y~0gyl|M^jz">
+                                    <field name="VAR" id="0V@vIZJuVpeV\`=~|_7PB">zNoRing</field>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+</xml>`
+    sendXmlToWorkspace(aluXml, false, "ALU.xml")
+}

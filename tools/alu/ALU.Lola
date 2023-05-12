@@ -1,0 +1,22 @@
+MODULE ALU (
+  (*x, y, z, zCOPY registers*)
+  IN x: [6] BIT;
+  IN y: [6] BIT;
+  OUT z: [6] BIT;
+  OUT zNoRing: [6] BIT;
+  (*operation code*)
+  IN op: [4] BIT;
+  (*flags*)
+  OUT BAF: [1] BIT;
+  OUT IOF: [1] BIT;
+  OUT ZF: [1] BIT;
+);
+  CONST k := 32;
+BEGIN
+  zNoRing := z;
+  zNoRing := op.3 -> op.2 -> (op.1 -> (op.0 -> x | y : x & y) : (op.0 -> x ^ y : ~x | ~y)) : (op.1 -> (op.0 -> x - y : x + y) : (op.0 -> x - 1 : x + 1)) : op.2 -> (op.1 -> (op.0 -> x <= y : x < y) : (op.0 -> x >= y : x > y)) : (op.1 -> (op.0 -> x # y : x = y) : (op.0 -> 0 : ~x));
+  ZF := zNoRing = 0 -> 1 : 0;
+  BAF := x >= k -> 1 : y >= k -> 1 : 0;
+  IOF := op = 1 -> 1 : 0;
+  z := zNoRing >= k -> zNoRing - k : zNoRing;
+END ALU.
