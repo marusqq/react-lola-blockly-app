@@ -13,7 +13,7 @@ Blockly.defineBlocksWithJsonArray([
         "previousStatement": null,
         "nextStatement": null,
         "colour": 0,
-        "tooltip": "",
+        "tooltip": "Comment block",
         "helpUrl": ""
     }
 

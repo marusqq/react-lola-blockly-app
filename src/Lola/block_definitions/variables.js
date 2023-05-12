@@ -13,7 +13,7 @@ Blockly.defineBlocksWithJsonArray([
         "output": null,
         "style": "variable_blocks",
         "helpUrl": "%{BKY_VARIABLES_GET_HELPURL}",
-        "tooltip": "%{BKY_VARIABLES_GET_TOOLTIP}",
+        "tooltip": "Variable name block",
         "extensions": ["contextMenu_variableSetterGetter"]
     },
 
@@ -41,7 +41,7 @@ Blockly.defineBlocksWithJsonArray([
         "style": "variable_blocks",
         "previousStatement": null,
         "nextStatement": null,
-        "tooltip": "",
+        "tooltip": "Block for initialising CONST values",
         "helpUrl": ""
     },
 
@@ -64,7 +64,7 @@ Blockly.defineBlocksWithJsonArray([
         "style": "variable_blocks",
         "previousStatement": null,
         "nextStatement": null,
-        "tooltip": "",
+        "tooltip": "Block for initialising variables but with no value",
         "helpUrl": ""
     },
 
@@ -145,7 +145,7 @@ Blockly.defineBlocksWithJsonArray([
         "previousStatement": null,
         "nextStatement": null,
         "style": "variable_blocks",
-        "tooltip": "",
+        "tooltip": "Block for initialising variables with special properties (BIT/WORD/...)",
         "helpUrl": ""
     },
     {
@@ -195,7 +195,7 @@ Blockly.defineBlocksWithJsonArray([
         "previousStatement": null,
         "nextStatement": null,
         "style": "variable_blocks",
-        "tooltip": "",
+        "tooltip": "Block for initialising variables with special properties (BIT/WORD/...)",
         "helpUrl": ""
     },
     {
@@ -241,7 +241,7 @@ Blockly.defineBlocksWithJsonArray([
         "previousStatement": null,
         "nextStatement": null,
         "style": "variable_blocks",
-        "tooltip": "",
+        "tooltip": "Block for initialising variables with special properties (BIT/WORD/...)",
         "helpUrl": ""
     },
     {
@@ -324,7 +324,7 @@ Blockly.defineBlocksWithJsonArray([
         "previousStatement": null,
         "nextStatement": null,
         "style": "variable_blocks",
-        "tooltip": "",
+        "tooltip": "Block for initialising variables with special properties (BIT/WORD/...)",
         "helpUrl": ""
     },
     {"type": "variable_declaration_block_5",
@@ -372,7 +372,7 @@ Blockly.defineBlocksWithJsonArray([
         "previousStatement": null,
         "nextStatement": null,
         "style": "variable_blocks",
-        "tooltip": "",
+        "tooltip": "Block for initialising variables with special properties (BIT/WORD/...)",
         "helpUrl": ""
     },
     {
@@ -392,7 +392,7 @@ Blockly.defineBlocksWithJsonArray([
         "inputsInline": true,
         "output": null,
         "style": "variable_blocks",
-        "tooltip": "",
+        "tooltip": "Block to access one bit of bit vector through dot",
         "helpUrl": ""
     },
     {
@@ -412,7 +412,7 @@ Blockly.defineBlocksWithJsonArray([
         "inputsInline": true,
         "output": null,
         "style": "variable_blocks",
-        "tooltip": "",
+        "tooltip": "Block to access one bit of bit vector through comma",
         "helpUrl": ""
     },
     {
@@ -432,7 +432,7 @@ Blockly.defineBlocksWithJsonArray([
         "inputsInline": true,
         "output": null,
         "style": "variable_blocks",
-        "tooltip": "",
+        "tooltip": "Block used to send variable commands through apostrophe",
         "helpUrl": ""
     },
     {
@@ -456,7 +456,7 @@ Blockly.defineBlocksWithJsonArray([
         "inputsInline": true,
         "output": null,
         "style": "variable_blocks",
-        "tooltip": "",
+        "tooltip": "Block used to access variable bit vector",
         "helpUrl": ""
     },
     {
