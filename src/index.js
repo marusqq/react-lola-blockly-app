@@ -44,7 +44,7 @@ const playgroundConfig = {
 }
 
 const defaultOptions = {
-    comments: true,
+    comments: false,
     trashcan: true,
     collapse: true,
     disable: true,
