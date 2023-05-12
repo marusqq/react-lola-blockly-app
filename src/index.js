@@ -8,6 +8,7 @@ import {
 
 import * as lola from './Lola/lola.js';
 import * as examples from './Lola/examples.js';
+import * as apis from './Lola/apis.js'
 import {
     convertLolaToVerilog,
     checkLolaCodeValid,
@@ -23,8 +24,7 @@ import {
     lastInvalidLolaGeneratedCode,
     exportXml,
     importXml,
-    consultChatGPT,
-    testingDebug,
+    consultChatGPT
 } from "./buttonMethods.js"
 import {toastWarning} from "./userAlerts"
 import {egg100, egg75, egg50, egg25, egg10} from "./eggs"
@@ -152,6 +152,34 @@ function configurePlayground(playground) {
         }
     });
 
+    // API endpoints
+    let apiEndpoints = gui.addFolder('API Docs')
+
+    // API endpoints /validate-lola
+    apiEndpoints.add({"/validate-lola": apis.validateLola}, "/validate-lola").onChange()
+
+    // API endpoints /ask-chat-gpt-lola
+    apiEndpoints.add({"/ask-chat-gpt-lola": apis.askChatGPTLola}, "/ask-chat-gpt-lola").onChange()
+
+    // API endpoints / lola-to-verilog
+    apiEndpoints.add({"/lola-to-verilog": apis.lolaToVerilog}, "/lola-to-verilog").onChange()
+
+    // API endpoints / lola-to-c
+    apiEndpoints.add({"/lola-to-c": apis.lolaToC}, "/lola-to-c").onChange()
+
+    // API endpoints / lola-to-vhdl
+    apiEndpoints.add({"/lola-to-vhdl": apis.lolaToVHDL}, "/lola-to-vhdl").onChange()
+
+    // API endpoints / lola-to-system-c
+    apiEndpoints.add({"/lola-to-system-c": apis.lolaToSystemC}, "/lola-to-system-c").onChange()
+
+    // API endpoints /generate-verilog-testbench
+    apiEndpoints.add({"/generate-verilog-testbench": apis.generateVerilogTestbench}, "/generate-verilog-testbench").onChange()
+
+    // API endpoints / simulate-verilog
+    apiEndpoints.add({"/stimulate-verilog": apis.stimulateVerilog}, "/stimulate-verilog").onChange()
+
+
     // add needed folders / functions
     // /Lola/
     let lolaFolder = gui.addFolder('Lola')
@@ -201,13 +229,9 @@ function configurePlayground(playground) {
     wirthSmallPrograms.add({"Counter.Lola": examples.counterExample}, "Counter.Lola").onChange();
     wirthSmallPrograms.add({"Shifter.Lola": examples.shifterExample}, "Shifter.Lola").onChange();
 
-
     // ADD XML options
     gui.add({"Export workspace as XML": exportXml}, "Export workspace as XML").onChange();
     gui.add({"Import workspace as XML": importXml}, "Import workspace as XML").onChange();
-
-    // add debug
-    // gui.add({"Debug": testingDebug}, "Debug").onChange();
 
     // since the code was not validated, hide folders / functions
     toggleValidCodeMethods(false)

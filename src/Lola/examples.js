@@ -66,7 +66,7 @@ export function aluExample() {
     <field name="moduleName">ALU</field>
     <statement name="module_parameters_input">
       <block type="comment_block" id="|%u_t)$Ha[@6fri}]ys8">
-        <field name="comment">x, y, z, zCOPY registers</field>
+        <field name="comment">x, y, z, zNoRing registers</field>
         <next>
           <block type="variable_declaration_block_4" id="Mq]~tj(Hk.rIG!s%AxRX">
             <field name="variable_in_out_type">IN</field>

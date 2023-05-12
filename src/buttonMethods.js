@@ -916,7 +916,3 @@ export function exportXml() {
     }
 
 }
-
-export async function testingDebug() {
-    toastInfo('hi :)')
-}

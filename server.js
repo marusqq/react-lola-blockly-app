@@ -47,8 +47,9 @@ function getTime(separator = " ") {
 }
 
 async function compileLola(lolaCode) {
+
+    // if no code was passed
     if (lolaCode.length === 0) {
-        console.log(`${getTime()} - compileLola() - No Lola code found, compiled = False`);
 
         const resultDict = {
             compiled: false,
@@ -56,8 +57,6 @@ async function compileLola(lolaCode) {
             compiledVerilogCode: "",
             emptyCode: true
         };
-
-        console.log(`${getTime()} - compileLola() - returning: ${JSON.stringify(resultDict)}`);
 
         return new Promise((resolve) => {
             setTimeout(() => {
@@ -79,21 +78,20 @@ async function compileLola(lolaCode) {
     try {
         fs.writeFileSync(filenameLola, lolaCode);
 
-        console.log(`${getTime()} - compileLola() - Compiling .Lola file with subProcess`);
-
         const {stdout, stderr} = await exec(`../Lola ${filenameLola} ${filenameVerilog}`, {
             timeout: 4000,
         });
 
         if (stderr) {
-            console.error(`${getTime()} - compileLola() - error1: ${err}`);
-
+            // failed
             compilationErrorsPos.push(stderr.toString());
-
             compiled = false;
+
         } else {
+            // read lines of output
             const linesOfOutput = stdout.split("\n");
 
+            // con
             for (const lineOfOutput of linesOfOutput) {
                 if (lineOfOutput.includes("err:")) {
                     compilationErrorsPos.push(lineOfOutput);
@@ -105,20 +103,13 @@ async function compileLola(lolaCode) {
             }
 
             if (compiled) {
-                console.log(`${getTime()} - compileLola() - reading compiled verilog file: ${filenameVerilog}`);
-
                 compiledVerilogCode = fs.readFileSync(filenameVerilog).toString();
             }
         }
     } catch (err) {
-        console.error(`${getTime()} - compileLola() - error2: ${err}`);
-
         compiled = false;
-
         compilationErrorsPos.push(`Error while compiling: ${err}`);
     }
-
-    console.log(`${getTime()} - compileLola() - delete files: ${filenameLola}, ${filenameVerilog}`);
 
     // delete files
     if (fs.existsSync(filenameLola)) {
@@ -158,8 +149,6 @@ async function compileLola(lolaCode) {
         emptyCode
     };
 
-    console.log(`${getTime()} - compileLola() - returning: ${JSON.stringify(resultDict)}`);
-
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve(resultDict);
@@ -182,8 +171,6 @@ async function verilogToC(verilogCode, moduleName) {
 
     try {
         fs.writeFileSync(filenameVerilog, verilogCode);
-
-        console.log(`${getTime()} - verilogToC() - converting verilog to C with ./v2c`);
 
         const command = `./compile/v2c ${filenameVerilog} --module ${moduleName} ${filenameC}`
         const {stdout, stderr} = await exec(command, {
@@ -210,7 +197,6 @@ async function verilogToC(verilogCode, moduleName) {
             }
 
             if (converted) {
-                console.log(`${getTime()} - verilogToC() - reading compiled c file: ${filenameC}`);
                 code = fs.readFileSync(filenameC).toString();
             }
         }
@@ -219,8 +205,6 @@ async function verilogToC(verilogCode, moduleName) {
         converted = false;
         conversionErrors.push(`Error while converting: ${err}`);
     }
-
-    console.log(`${getTime()} - verilogToC() - delete files: ${filenameC}, ${filenameVerilog}`);
 
     // delete files
     if (fs.existsSync(filenameC)) {
@@ -235,8 +219,6 @@ async function verilogToC(verilogCode, moduleName) {
         conversionErrors,
         code,
     };
-
-    console.log(`${getTime()} - verilogToC() - returning: ${JSON.stringify(resultDict)}`);
 
     return new Promise((resolve) => {
         setTimeout(() => {
@@ -263,14 +245,10 @@ async function verilogToSystemC(verilogCode, moduleName) {
     try {
         fs.writeFileSync(filenameVerilog, verilogCode);
 
-        console.log(`${getTime()} - verilogToSystemC() - converting verilog to SystemC with ./v2sc`);
-
         const command = `./compile/v2sc ${filenameVerilog}`
         const {stdout, stderr} = await exec(command, {timeout: 4000,});
 
         if (stderr) {
-            console.error(`${getTime()} - verilogToSystemC() - error5: ${err}`);
-
             conversionErrors.push(stderr.toString());
             converted = false;
 
@@ -278,7 +256,6 @@ async function verilogToSystemC(verilogCode, moduleName) {
             const linesOfOutput = stdout.split("\n");
 
             for (const lineOfOutput of linesOfOutput) {
-                console.log(lineOfOutput)
                 if (lineOfOutput.includes(`Error 2001 ${noPathVerilogFileName}.v`)) {
                     conversionErrors.push(lineOfOutput.replace(`Error 2001 ${noPathVerilogFileName}.v`, ""));
                     converted = false;
@@ -289,10 +266,7 @@ async function verilogToSystemC(verilogCode, moduleName) {
             }
 
             if (converted) {
-                console.log(`${getTime()} - verilogToSystemC() - reading compiled SystemC CPP file: ${filenameSystemCPP}`);
                 codeCPP = fs.readFileSync(filenameSystemCPP).toString();
-
-                console.log(`${getTime()} - verilogToSystemC() - reading compiled SystemC H file: ${filenameSystemH}`);
                 codeH = fs.readFileSync(filenameSystemH).toString();
             }
         }
@@ -301,8 +275,6 @@ async function verilogToSystemC(verilogCode, moduleName) {
         converted = false;
         conversionErrors.push(`Error while converting: ${err}`);
     }
-
-    console.log(`${getTime()} - verilogToSystemC() - delete files: ${filenameSystemCPP}, ${filenameSystemH}, ${filenameVerilog}`);
 
     // delete files
     if (fs.existsSync(filenameSystemCPP)) {
@@ -321,8 +293,6 @@ async function verilogToSystemC(verilogCode, moduleName) {
         codeCPP,
         codeH
     };
-
-    console.log(`${getTime()} - verilogToSystemC() - returning: ${JSON.stringify(resultDict)}`);
 
     return new Promise((resolve) => {
         setTimeout(() => {
@@ -349,8 +319,6 @@ async function verilogToVHDL(verilogCode) {
     try {
         fs.writeFileSync(filenameVerilog, verilogCode);
 
-        console.log(`${getTime()} - verilogToVHDL() - converting verilog to VHDL with ./iverilog`);
-
         // iverilog -t vhdl Adder.v -o Adder.vhdl
         const command = `/usr/bin/iverilog -t vhdl ${filenameVerilog} -o ${filenameVHDL}`
         const {stdout, stderr} = await exec(command, {timeout: 4000,});
@@ -374,7 +342,6 @@ async function verilogToVHDL(verilogCode) {
             }
 
             if (converted) {
-                console.log(`${getTime()} - verilogToVHDL() - reading compiled VHDL file: ${filenameVHDL}`);
                 code = fs.readFileSync(filenameVHDL).toString();
             }
         }
@@ -383,8 +350,6 @@ async function verilogToVHDL(verilogCode) {
         converted = false;
         conversionErrors.push(`Error while converting: ${err}`);
     }
-
-    console.log(`${getTime()} - verilogToVHDL() - delete files: ${filenameVHDL}, ${filenameVerilog}`);
 
     // delete files
     if (fs.existsSync(filenameVHDL)) {
@@ -400,8 +365,6 @@ async function verilogToVHDL(verilogCode) {
         code,
     };
 
-    console.log(`${getTime()} - verilogToVHDL() - returning: ${JSON.stringify(resultDict)}`);
-
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve(resultDict);
@@ -415,8 +378,6 @@ app.listen(port, '127.0.0.1', () => console.log(`${getTime()} Listening on port 
 
 // lola validator
 app.post('/validate-lola', async (req, res) => {
-    console.log('--- /check_valid_lola endpoint call START ---')
-    console.log(`${getTime()} Received request with payload: ${JSON.stringify(req.body)}`);
 
     let resp = {
         'status': 200,
@@ -424,261 +385,59 @@ app.post('/validate-lola', async (req, res) => {
         'compilationErrors': [],
     }
 
-    console.log(`${getTime()} Trying to compile lola code...`);
-    compileLola(req.body.code).then((compiledDict) => {
-        // try compiling lola code
-        console.log(`${getTime()} compileLolaDict: ${JSON.stringify(compiledDict)}`);
-        resp.valid = compiledDict.compiled
-        resp.compilationErrors = compiledDict.compilationErrors
-        resp.emptyCode = compiledDict.emptyCode
-        console.log(`${getTime()} response: ${JSON.stringify(resp)}`);
-        console.log('--- /check_valid_lola endpoint call END ---')
-        res.send(JSON.stringify(resp));
-    }).catch((err) => {
-        console.error(err);
-    });
-});
+    // check for expected body values
+    if (!req.body.hasOwnProperty('code')) {
+        resp.status = 400;
+        resp.compilationErrors = ['code parameter missing'];
+        res.send(JSON.stringify(resp))
+    } else {
 
-// lola to verilog converter
-app.post('/lola-to-verilog', async (req, res) => {
-    console.log('--- /compile_lola endpoint call START ---')
-    console.log(`${getTime()} Received request with payload: ${JSON.stringify(req.body)}`);
+        compileLola(req.body.code).then((compiledDict) => {
 
-    let resp = {
-        'status': 200,
-        'compiled': false,
-        'compilationErrors': [],
-        'verilogCode': ""
+            resp.valid = compiledDict.compiled
+            resp.compilationErrors = compiledDict.compilationErrors
+            resp.emptyCode = compiledDict.emptyCode
+
+            res.send(JSON.stringify(resp));
+
+        }).catch((err) => {
+
+            // if any error found
+            resp.status = 500;
+            resp.compilationErrors = ['internal server error'];
+            res.send(JSON.stringify(resp));
+        });
     }
-
-
-    console.log(`${getTime()} Trying to compile lola code...`);
-    compileLola(req.body.code).then((compiledDict) => {
-        // try compiling lola code
-        console.log(`${getTime()} compiled LolaDict: ${JSON.stringify(compiledDict)}`);
-        resp.compiled = compiledDict.compiled
-        resp.compilationErrors = compiledDict.compilationErrors
-        resp.verilogCode = compiledDict.compiledVerilogCode
-        resp.emptyCode = compiledDict.emptyCode
-        console.log(`${getTime()} returning response: ${JSON.stringify(resp)}`);
-        console.log('--- /compile_lola endpoint call END ---')
-        res.send(JSON.stringify(resp));
-    }).catch((err) => {
-        console.error(err);
-    })
-
 });
 
 // endpoint to ask ChatGPT
 app.post('/ask-chat-gpt-lola', async (req, res) => {
-    console.log('--- /ask-chat-gpt-lola endpoint call START ---');
 
     let resp = {
         'status': 200,
         'response': ''
     }
 
-    // get the prompt from the query parameters
-    const lolaCode = req.body.lolaCode;
-    console.log(`lolaCode: ${lolaCode}`)
+    const requiredParams = ['lolaCode', 'lolaErrors'];
+    const missingParams = [];
 
-    const errors = req.body.lolaErrors;
-    console.log(`errors: ${errors}`)
-
-    if (!lolaCode || !errors) {
-        resp.status = 400;
-        resp.response = "Bad request"
-        res.send(JSON.stringify(resp));
-    }
-
-    const prompt = `Explain why this LOLA HDL code fails with: \n${errors}. \nCode:\n ${lolaCode}`
-
-    // set up the API request data
-    const data = {
-        "model": "gpt-3.5-turbo",
-        "messages": [{"role": "user", "content": prompt}]
-    };
-
-    // set up the API request headers, including the API key from the .env file
-    const headers = {
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
-        "Content-Type": "application/json"
-    };
-
-    try {
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify(data)
-        });
-
-        const responseData = await response.json();
-        console.log(`response: ${JSON.stringify(responseData)}`)
-        try {
-            const answer = responseData['choices'][0]['message']['content'].trim();
-            console.log(`chatgpt answer: ${answer}`)
-            resp.response = answer
-            res.send(JSON.stringify(resp));
-        } catch (error) {
-            console.log(responseData['error']['message'])
-            resp.response = responseData['error']['message']
-            console.log('--- /ask-chat-gpt-lola endpoint call END ---');
-            res.send(JSON.stringify(resp));
+    for (const param of requiredParams) {
+        if (!req.body.hasOwnProperty(param)) {
+            missingParams.push(param);
         }
+    }
 
-
-    } catch (error) {
-        console.error(error);
-        resp.status = 500;
-        resp.response = "Internal server error";
-        console.log('--- /ask-chat-gpt-lola endpoint call END ---');
+    if (missingParams.length > 0) {
+        resp.response = `Missing required parameters: ${missingParams.join(', ')}`;
+        resp.status = 400;
         res.send(JSON.stringify(resp));
-    }
-});
+    } else {
 
-app.post('/lola-to-vhdl', async (req, res) => {
-    console.log('--- /lola-to-vhdl endpoint call START ---');
-    console.log(`${getTime()} Received request with payload: ${JSON.stringify(req.body)}`);
+        // get the prompt from the query parameters
+        const lolaCode = req.body.lolaCode;
+        const errors = req.body.lolaErrors;
 
-    let resp = {
-        'status': 200,
-        'conversionErrors': [],
-        'code': "",
-        'converted': true
-    }
-
-    console.log(`${getTime()} Trying to compile lola code to verilog first...`);
-    // try compiling lola code to verilog
-    compileLola(req.body.code).then((compiledDict) => {
-        console.log(`${getTime()} compiled LolaDict: ${JSON.stringify(compiledDict)}`);
-
-        console.log(`${getTime()} Trying to compile verilog to VHDL`);
-        // when it's compiled to verilog, convert verilog to VHDL
-        verilogToVHDL(compiledDict.compiledVerilogCode).then((convertedDict) => {
-
-            resp.code = convertedDict.code
-            resp.conversionErrors = convertedDict.conversionErrors
-            resp.converted = convertedDict.converted
-            console.log(`${getTime()} returning response: ${JSON.stringify(resp)}`);
-            console.log('--- /lola-to-vhdl endpoint call END ---')
-            res.send(JSON.stringify(resp));
-
-        }).catch((err) => {
-            console.error(err);
-        })
-
-    }).catch((err) => {
-        console.error(err);
-    })
-});
-
-app.post('/lola-to-c', async (req, res) => {
-    console.log('--- /lola-to-c endpoint call START ---');
-    console.log(`${getTime()} Received request with payload: ${JSON.stringify(req.body)}`);
-
-    let resp = {
-        'status': 200,
-        'conversionErrors': [],
-        'code': "",
-        'converted': true
-    }
-
-    console.log(`${getTime()} Trying to compile lola code to verilog first...`);
-    // try compiling lola code to verilog
-    compileLola(req.body.code).then((compiledDict) => {
-        console.log(`${getTime()} compiled LolaDict: ${JSON.stringify(compiledDict)}`);
-
-        console.log(`${getTime()} Trying to compile verilog to C`);
-        // when it's compiled to verilog, convert verilog to C
-        let moduleName = req.body.moduleName;
-        verilogToC(compiledDict.compiledVerilogCode, moduleName).then((convertedDict) => {
-
-            resp.code = convertedDict.code
-            resp.conversionErrors = convertedDict.conversionErrors
-            resp.converted = convertedDict.converted
-            console.log(`${getTime()} returning response: ${JSON.stringify(resp)}`);
-            console.log('--- /lola-to-c endpoint call END ---')
-            res.send(JSON.stringify(resp));
-
-        }).catch((err) => {
-            console.error(err);
-        })
-
-    }).catch((err) => {
-        console.error(err);
-    })
-});
-
-app.post('/lola-to-system-c', async (req, res) => {
-    console.log('--- /lola-to-system-c endpoint call START ---');
-    console.log(`${getTime()} Received request with payload: ${JSON.stringify(req.body)}`);
-
-    let resp = {
-        'status': 200,
-        'conversionErrors': [],
-        'codeCPP': "",
-        'codeH': "",
-        'converted': true
-    }
-
-    console.log(`${getTime()} Trying to compile lola code to verilog first...`);
-    // try compiling lola code to verilog
-    compileLola(req.body.code).then((compiledDict) => {
-        console.log(`${getTime()} compiled LolaDict: ${JSON.stringify(compiledDict)}`);
-
-        // when it's compiled to verilog, convert verilog to system C
-        console.log(`${getTime()} Trying to compile verilog to systemC`);
-        let moduleName = req.body.moduleName;
-        verilogToSystemC(compiledDict.compiledVerilogCode, moduleName).then((convertedDict) => {
-
-            resp.codeCPP = convertedDict.codeCPP
-            resp.codeH = convertedDict.codeH
-            resp.conversionErrors = convertedDict.conversionErrors
-            resp.converted = convertedDict.converted
-
-            console.log(`${getTime()} returning response: ${JSON.stringify(resp)}`);
-            console.log('--- /lola-to-system-c endpoint call END ---')
-            res.send(JSON.stringify(resp));
-
-        }).catch((err) => {
-            console.error(err);
-        })
-
-    }).catch((err) => {
-        console.error(err);
-    })
-});
-
-// endpoint to ask ChatGPT
-app.post('/generate-verilog-testbench', async (req, res) => {
-    console.log('--- /generate-verilog-testbench endpoint call START ---');
-    console.log(`${getTime()} Received request with payload: ${JSON.stringify(req.body)}`);
-
-    let resp = {
-        'status': 200,
-        'testbenchCode': '',
-        'generated': false
-    }
-
-    if (req.body.useChatGPT) {
-        // if useChatGPT = true, use chatgpt to generate testbench code
-        let verilogCode = req.body.verilogCode
-
-        const prompt = `For this verilog code: ${verilogCode}\n
-        Create minimal testbench, don't reach character limit, only reply with code.
-        Don't add backtick at the end and don't use comments at testbench. Use small values
-        Print:
-            - variable names and their values,
-            - results,
-            - expected results 
-            - if results != expected results
-        `
-
-        const oldPrompt = `For this verilog code: ${verilogCode}\n
-        Create minimal testbench, don't reach character limit, only reply with code.
-        Add prints for variables (specify which are input / output) and results. 
-        Print what was expected and use close to none comments. Don't add backtick at the end`
-
+        const prompt = `Explain why this LOLA HDL code fails with: \n${errors}. \nCode:\n ${lolaCode}`
 
         // set up the API request data
         const data = {
@@ -700,150 +459,382 @@ app.post('/generate-verilog-testbench', async (req, res) => {
             });
 
             const responseData = await response.json();
-            console.log(`response: ${JSON.stringify(responseData)}`)
             try {
-                const answer = responseData['choices'][0]['message']['content'].trim();
-                console.log(`chatgpt answer: ${answer}`)
-                resp.testbenchCode = answer;
-                resp.generated = true;
-                console.log('--- /generate-verilog-testbench endpoint call END ---');
+                resp.response = responseData['choices'][0]['message']['content'].trim();
                 res.send(JSON.stringify(resp));
 
             } catch (error) {
-                let errorMessage = responseData['error']['message']
-                console.log(errorMessage)
-                resp.testbenchCode = errorMessage
-                resp.generated = false
-                console.log('--- /generate-verilog-testbench endpoint call END ---');
+                resp.status = 500;
+                resp.response = responseData['error']['message']
                 res.send(JSON.stringify(resp));
             }
 
 
         } catch (error) {
-            console.error(error);
             resp.status = 500;
             resp.response = "Internal server error";
-            console.log('--- /generate-verilog-testbench endpoint call END ---');
             res.send(JSON.stringify(resp));
         }
-
-
-    } else {
-        // if useChatGPT = false, try to genereate testbench automatically
-        resp.testbenchCode = 'not implemented';
-        resp.generated = false;
-        console.log('--- /generate-verilog-testbench endpoint call END ---');
-        res.send(JSON.stringify(resp));
     }
-
 });
 
-app.post('/stimulate-verilog', async (req, res) => {
-    console.log('--- /stimulate-verilog endpoint call START ---');
+// lola to verilog converter
+app.post('/lola-to-verilog', async (req, res) => {
 
-    console.log(`${getTime()} Received request with payload: ${JSON.stringify(req.body)}`);
+    let resp = {
+        'status': 200,
+        'compiled': false,
+        'compilationErrors': [],
+        'verilogCode': ""
+    }
+
+    // check for expected body values
+    if (!req.body.hasOwnProperty('code')) {
+        resp.status = 400;
+        resp.compilationErrors = ['code parameter missing'];
+        res.send(JSON.stringify(resp))
+    } else {
+
+        compileLola(req.body.code).then((compiledDict) => {
+
+            resp.compiled = compiledDict.compiled
+            resp.compilationErrors = compiledDict.compilationErrors
+            resp.verilogCode = compiledDict.compiledVerilogCode
+            resp.emptyCode = compiledDict.emptyCode
+
+            res.send(JSON.stringify(resp));
+
+        }).catch((err) => {
+            // if any error found
+            resp.status = 500;
+            resp.compilationErrors = ['internal server error'];
+            res.send(JSON.stringify(resp));
+        })
+    }
+});
+
+// endpoint lola => vhdl
+app.post('/lola-to-vhdl', async (req, res) => {
+
+    let resp = {
+        'status': 200,
+        'conversionErrors': [],
+        'code': "",
+        'converted': true
+    }
+
+    // check for expected body values
+    if (!req.body.hasOwnProperty('code')) {
+        resp.status = 400;
+        resp.conversionErrors = ['code parameter missing'];
+        res.send(JSON.stringify(resp))
+    } else {
+
+        // try compiling lola code to verilog
+        compileLola(req.body.code).then((compiledDict) => {
+
+            // when it's compiled to verilog, convert verilog to VHDL
+            verilogToVHDL(compiledDict.compiledVerilogCode).then((convertedDict) => {
+
+                resp.code = convertedDict.code
+                resp.conversionErrors = convertedDict.conversionErrors
+                resp.converted = convertedDict.converted
+                res.send(JSON.stringify(resp));
+
+            }).catch((err) => {
+                resp.status = 500;
+                resp.converted = false;
+                resp.conversionErrors = ['internal server error'];
+                res.send(JSON.stringify(resp));
+            })
+
+        }).catch((err) => {
+            resp.status = 500;
+            resp.converted = false;
+            resp.conversionErrors = ['internal server error'];
+            res.send(JSON.stringify(resp));
+        })
+    }
+});
+
+// endpoint to convert lola to c
+app.post('/lola-to-c', async (req, res) => {
+
+    let resp = {
+        'status': 200,
+        'conversionErrors': [],
+        'code': "",
+        'converted': true
+    }
+
+    const requiredParams = ['code', 'moduleName'];
+    const missingParams = [];
+
+    for (const param of requiredParams) {
+        if (!req.body.hasOwnProperty(param)) {
+            missingParams.push(param);
+        }
+    }
+
+    if (missingParams.length > 0) {
+        resp.conversionErrors = [`Missing required parameters: ${missingParams.join(', ')}`];
+        resp.status = 400;
+        resp.converted = false;
+        res.send(JSON.stringify(resp));
+    } else {
+
+        // try compiling lola code to verilog
+        compileLola(req.body.code).then((compiledDict) => {
+
+            // when it's compiled to verilog, convert verilog to C
+            let moduleName = req.body.moduleName;
+            verilogToC(compiledDict.compiledVerilogCode, moduleName).then((convertedDict) => {
+
+                resp.code = convertedDict.code
+                resp.conversionErrors = convertedDict.conversionErrors
+                resp.converted = convertedDict.converted
+                res.send(JSON.stringify(resp));
+
+            }).catch((err) => {
+                resp.status = 500;
+                resp.converted = false;
+                resp.conversionErrors = ['internal server error'];
+                res.send(JSON.stringify(resp));
+            })
+
+        }).catch((err) => {
+            resp.status = 500;
+            resp.converted = false;
+            resp.conversionErrors = ['internal server error'];
+            res.send(JSON.stringify(resp));
+        })
+    }
+});
+
+// endpoint to convert lola to systemC
+app.post('/lola-to-system-c', async (req, res) => {
+
+    let resp = {
+        'status': 200,
+        'conversionErrors': [],
+        'codeCPP': "",
+        'codeH': "",
+        'converted': true
+    }
+
+    const requiredParams = ['code', 'moduleName'];
+    const missingParams = [];
+
+    for (const param of requiredParams) {
+        if (!req.body.hasOwnProperty(param)) {
+            missingParams.push(param);
+        }
+    }
+
+    if (missingParams.length > 0) {
+        resp.conversionErrors = [`Missing required parameters: ${missingParams.join(', ')}`];
+        resp.status = 400;
+        resp.converted = false;
+        res.send(JSON.stringify(resp));
+    } else {
+
+        // try compiling lola code to verilog
+        compileLola(req.body.code).then((compiledDict) => {
+
+            // when it's compiled to verilog, convert verilog to system C
+            let moduleName = req.body.moduleName;
+            verilogToSystemC(compiledDict.compiledVerilogCode, moduleName).then((convertedDict) => {
+
+                resp.codeCPP = convertedDict.codeCPP
+                resp.codeH = convertedDict.codeH
+                resp.conversionErrors = convertedDict.conversionErrors
+                resp.converted = convertedDict.converted
+                res.send(JSON.stringify(resp));
+
+            }).catch((err) => {
+                resp.status = 500;
+                resp.converted = false;
+                resp.conversionErrors = ['internal server error'];
+                res.send(JSON.stringify(resp));
+            })
+
+        }).catch((err) => {
+            resp.status = 500;
+            resp.converted = false;
+            resp.conversionErrors = ['internal server error'];
+            res.send(JSON.stringify(resp));
+        })
+    }
+});
+
+// endpoint to ask ChatGPT
+app.post('/generate-verilog-testbench', async (req, res) => {
+
+    let resp = {
+        'status': 200,
+        'testbenchCode': '',
+        'generated': false
+    }
+
+    const requiredParams = ['useChatGPT', 'verilogCode'];
+    const missingParams = [];
+
+    for (const param of requiredParams) {
+        if (!req.body.hasOwnProperty(param)) {
+            missingParams.push(param);
+        }
+    }
+
+    if (missingParams.length > 0) {
+        resp.testbenchCode = `Missing required parameters: ${missingParams.join(', ')}`;
+        resp.status = 400;
+        resp.generated = false;
+        res.send(JSON.stringify(resp));
+    } else {
+
+        if (req.body.useChatGPT) {
+            // if useChatGPT = true, use ChatGPT to generate testbench code
+            let verilogCode = req.body.verilogCode
+
+            const prompt = `For this verilog code: ${verilogCode}\n
+            Create minimal testbench, don't reach character limit, only reply with code.
+            Don't add backtick at the end and don't use comments at testbench. Use small values
+            Print:
+                - variable names and their values,
+                - results,
+                - expected results 
+                - if results != expected results
+            `
+
+            // set up the API request data
+            const data = {
+                "model": "gpt-3.5-turbo",
+                "messages": [{"role": "user", "content": prompt}]
+            };
+
+            // set up the API request headers, including the API key from the .env file
+            const headers = {
+                "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+                "Content-Type": "application/json"
+            };
+
+            try {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(data)
+                });
+
+                const responseData = await response.json();
+                try {
+                    resp.testbenchCode = responseData['choices'][0]['message']['content'].trim();
+                    resp.generated = true;
+                    res.send(JSON.stringify(resp));
+
+                } catch (error) {
+
+                    resp.status = 500;
+                    resp.generated = false;
+                    resp.testbenchCode = responseData['error']['message'];
+                    res.send(JSON.stringify(resp));
+                }
+
+
+            } catch (error) {
+                resp.status = 500;
+                resp.generated = false;
+                resp.testbenchCode = 'internal server error';
+                res.send(JSON.stringify(resp));
+            }
+
+
+        } else {
+            // if useChatGPT = false, try to genereate testbench automatically
+            resp.status = 501;
+            resp.generated = false;
+            resp.testbenchCode = 'not implemented';
+            res.send(JSON.stringify(resp));
+        }
+    }
+});
+
+// endpoint to stimulate verilog file with testbench
+app.post('/stimulate-verilog', async (req, res) => {
 
     let resp = {
         'status': 200,
         'stimulated': false,
         'stimulatedOutput': []
     }
-    const moduleName = req.body.moduleName;
-    console.log(`moduleName: ${moduleName}`)
 
-    const verilogCode = req.body.verilogCode;
-    console.log(`verilogCode: ${verilogCode}`)
+    const requiredParams = ['moduleName', 'verilogCode', 'testbenchCode'];
+    const missingParams = [];
 
-    const testbenchCode = req.body.testbenchCode;
-    console.log(`testbenchCode: ${testbenchCode}`)
-
-    const datetime = getTime("_");
-    const prePath = 'compile/';
-
-    const filenameVerilogName = `${moduleName}_${datetime}.v`;
-    const filenameTestbenchName = `${moduleName}_${datetime}_tb.v`;
-    const filenameStimulusName = `${moduleName}_${datetime}`
-    const temporaryFileName = `temp_${datetime}`
-
-    const filenameVerilog = prePath + filenameVerilogName
-    const filenameTestbench = prePath + filenameTestbenchName
-    const filenameStimulus = prePath + filenameStimulusName
-    const temporaryFile = prePath + temporaryFileName
-
-    let stdout = '';
-    let stderr = '';
-    let stdout2 = '';
-    let stderr2 = '';
-
-    try {
-
-        fs.writeFileSync(filenameVerilog, verilogCode);
-        fs.writeFileSync(filenameTestbench, testbenchCode);
-
-        console.log(`${getTime()} - /stimulate-verilog - stimulating verilog with iverilog ./usr/bin/iverilog`);
-
-        // iverilog -o stimulus_moduleName_datetime testbenchFile verilogFile
-        const command = `/usr/bin/iverilog -o ${filenameStimulus} ${filenameTestbench} ${filenameVerilog}`
-        const {stdout, stderr} = await exec(command, {timeout: 9000,});
-
-        // unix errors might be warnings, go through them
-        let errOK = true;
-
-        // IF THERE IS ANY OUTPUT => go through it, warning: OK, anything else => gg
-        if (stderr.length > 0) {
-            const linesOfErrors = stderr.split("\n");
-            for (const lineOfError of linesOfErrors) {
-                // if line of output is not 'warning: ' and there is something
-                if (!(lineOfError.includes('warning: ')) && lineOfError.length > 0) {
-                    errOK = false;
-                    resp.stimulatedOutput.push(linesOfErrors);
-                    break;
-                }
-            }
+    for (const param of requiredParams) {
+        if (!req.body.hasOwnProperty(param)) {
+            missingParams.push(param);
         }
+    }
 
-        // if error => bad
-        if (!errOK) {
-            console.error(`${getTime()} - /stimulate-verilog - unix error10: ${stderr}`);
-            resp.stimulated = false;
-            resp.stimulatedOutput = [stderr];
-            if (fs.existsSync(filenameVerilog)) {
-                fs.unlinkSync(filenameVerilog);
-            }
-            if (fs.existsSync(filenameTestbench)) {
-                fs.unlinkSync(filenameTestbench);
-            }
-            if (fs.existsSync(filenameStimulus)) {
-                fs.unlinkSync(filenameStimulus);
-            }
-            if (fs.existsSync(temporaryFile)) {
-                fs.unlinkSync(temporaryFile);
-            }
-            console.log('--- /stimulate-verilog endpoint call END #2 ---')
-            res.send(JSON.stringify(resp));
+    if (missingParams.length > 0) {
+        resp.status = 400;
+        resp.stimulatedOutput = [`Missing required parameters: ${missingParams.join(', ')}`];
+        resp.stimulated = false;
+        res.send(JSON.stringify(resp));
+    } else {
 
-        } else {
-            // if error => Ok, go
-            let stdoutOK = true;
+        const moduleName = req.body.moduleName;
+        const verilogCode = req.body.verilogCode;
+        const testbenchCode = req.body.testbenchCode;
+
+        const datetime = getTime("_");
+        const prePath = 'compile/';
+
+        const filenameVerilogName = `${moduleName}_${datetime}.v`;
+        const filenameTestbenchName = `${moduleName}_${datetime}_tb.v`;
+        const filenameStimulusName = `${moduleName}_${datetime}`
+        const temporaryFileName = `temp_${datetime}`
+
+        const filenameVerilog = prePath + filenameVerilogName
+        const filenameTestbench = prePath + filenameTestbenchName
+        const filenameStimulus = prePath + filenameStimulusName
+        const temporaryFile = prePath + temporaryFileName
+
+        let stdout = '';
+        let stderr = '';
+        let stdout2 = '';
+        let stderr2 = '';
+
+        try {
+
+            fs.writeFileSync(filenameVerilog, verilogCode);
+            fs.writeFileSync(filenameTestbench, testbenchCode);
+
+            // iverilog -o stimulus_moduleName_datetime testbenchFile verilogFile
+            const command = `/usr/bin/iverilog -o ${filenameStimulus} ${filenameTestbench} ${filenameVerilog}`
+            const {stdout, stderr} = await exec(command, {timeout: 9000,});
+
+            // unix errors might be warnings, go through them
+            let errOK = true;
 
             // IF THERE IS ANY OUTPUT => go through it, warning: OK, anything else => gg
-            if (stdout.length > 0) {
-                const linesOfOutput = stdout.split("\n");
-                for (const lineOfOutput of linesOfOutput) {
-                    // if line of output is not 'warning: '
-                    if (!lineOfOutput.includes('warning: ') && lineOfOutput.length > 0) {
-                        stdoutOK = false;
-                        resp.stimulatedOutput.push(linesOfOutput);
+            if (stderr.length > 0) {
+                const linesOfErrors = stderr.split("\n");
+                for (const lineOfError of linesOfErrors) {
+                    // if line of output is not 'warning: ' and there is something
+                    if (!(lineOfError.includes('warning: ')) && lineOfError.length > 0) {
+                        errOK = false;
+                        resp.stimulatedOutput.push(linesOfErrors);
                         break;
                     }
                 }
             }
 
-            // if code is bad
-            if (!stdoutOK) {
-                console.log('code bad?')
-
+            // if error => bad
+            if (!errOK) {
+                console.error(`${getTime()} - /stimulate-verilog - unix error10: ${stderr}`);
                 resp.stimulated = false;
+                resp.stimulatedOutput = [stderr];
                 if (fs.existsSync(filenameVerilog)) {
                     fs.unlinkSync(filenameVerilog);
                 }
@@ -856,25 +847,32 @@ app.post('/stimulate-verilog', async (req, res) => {
                 if (fs.existsSync(temporaryFile)) {
                     fs.unlinkSync(temporaryFile);
                 }
-                console.log('--- /stimulate-verilog endpoint call END #3 ---')
+
+                resp.status = 500;
+                resp.stimulatedOutput = ['internal server error'];
+                resp.stimulated = false;
                 res.send(JSON.stringify(resp));
 
             } else {
+                // if error => Ok, go
+                let stdoutOK = true;
 
-                console.log(`${getTime()} - /stimulate-verilog - reading ${filenameStimulus} with /usr/bin/vvp`);
+                // IF THERE IS ANY OUTPUT => go through it, warning: OK, anything else => gg
+                if (stdout.length > 0) {
+                    const linesOfOutput = stdout.split("\n");
+                    for (const lineOfOutput of linesOfOutput) {
+                        // if line of output is not 'warning: '
+                        if (!lineOfOutput.includes('warning: ') && lineOfOutput.length > 0) {
+                            stdoutOK = false;
+                            resp.stimulatedOutput.push(linesOfOutput);
+                            break;
+                        }
+                    }
+                }
 
-                // now read that stimulus with vvp if everything is ok
-                // vvp stimulus_moduleName_datetime
+                // if code is bad
+                if (!stdoutOK) {
 
-                const command = `/usr/bin/vvp ${filenameStimulus} > ${temporaryFile}`
-                console.log(command)
-                const {stdout2, stderr2} = await exec(command, {timeout: 10000,});
-
-                // any errors => not okay
-                if (stderr2) {
-                    console.error(`${getTime()} - /stimulate-verilog - error11: ${stderr2}`);
-
-                    resp.stimulatedOutput.push(stderr2.toString());
                     resp.stimulated = false;
                     if (fs.existsSync(filenameVerilog)) {
                         fs.unlinkSync(filenameVerilog);
@@ -888,57 +886,88 @@ app.post('/stimulate-verilog', async (req, res) => {
                     if (fs.existsSync(temporaryFile)) {
                         fs.unlinkSync(temporaryFile);
                     }
-                    console.log('--- /stimulate-verilog endpoint call END #4 ---')
+
                     res.send(JSON.stringify(resp));
 
                 } else {
 
-                    let data = fs.readFileSync(temporaryFile).toString()
+                    // now read that stimulus with vvp if everything is ok
+                    // vvp stimulus_moduleName_datetime
 
-                    const linesOfOutput = data.split("\n");
+                    const command = `/usr/bin/vvp ${filenameStimulus} > ${temporaryFile}`
+                    const {stdout2, stderr2} = await exec(command, {timeout: 10000,});
 
-                    for (const lineOfOutput of linesOfOutput) {
-                        resp.stimulatedOutput.push(lineOfOutput);
+                    // any errors => not okay
+                    if (stderr2) {
+
+                        resp.stimulatedOutput.push(stderr2.toString());
+                        resp.stimulated = false;
+                        if (fs.existsSync(filenameVerilog)) {
+                            fs.unlinkSync(filenameVerilog);
+                        }
+                        if (fs.existsSync(filenameTestbench)) {
+                            fs.unlinkSync(filenameTestbench);
+                        }
+                        if (fs.existsSync(filenameStimulus)) {
+                            fs.unlinkSync(filenameStimulus);
+                        }
+                        if (fs.existsSync(temporaryFile)) {
+                            fs.unlinkSync(temporaryFile);
+                        }
+                        resp.status = 500;
+                        resp.stimulatedOutput = ['internal server error'];
+                        resp.stimulated = false;
+                        res.send(JSON.stringify(resp));
+
+                    } else {
+
+                        let data = fs.readFileSync(temporaryFile).toString()
+
+                        const linesOfOutput = data.split("\n");
+
+                        for (const lineOfOutput of linesOfOutput) {
+                            resp.stimulatedOutput.push(lineOfOutput);
+                        }
+                        resp.stimulated = true;
+                        if (fs.existsSync(filenameVerilog)) {
+                            fs.unlinkSync(filenameVerilog);
+                        }
+                        if (fs.existsSync(filenameTestbench)) {
+                            fs.unlinkSync(filenameTestbench);
+                        }
+                        if (fs.existsSync(filenameStimulus)) {
+                            fs.unlinkSync(filenameStimulus);
+                        }
+                        if (fs.existsSync(temporaryFile)) {
+                            fs.unlinkSync(temporaryFile);
+                        }
+
+                        res.send(JSON.stringify(resp));
                     }
-                    resp.stimulated = true;
-                    if (fs.existsSync(filenameVerilog)) {
-                        fs.unlinkSync(filenameVerilog);
-                    }
-                    if (fs.existsSync(filenameTestbench)) {
-                        fs.unlinkSync(filenameTestbench);
-                    }
-                    if (fs.existsSync(filenameStimulus)) {
-                        fs.unlinkSync(filenameStimulus);
-                    }
-                    if (fs.existsSync(temporaryFile)) {
-                        fs.unlinkSync(temporaryFile);
-                    }
-                    console.log('--- /stimulate-verilog endpoint call END #5 ---')
-                    res.send(JSON.stringify(resp));
                 }
             }
-        }
 
 
-    } catch (err) {
-        console.error(`${getTime()} - /stimulate-verilog - error12`);
+        } catch (err) {
 
-        resp.stimulated = false;
-        resp.stimulatedOutput = [err.toString()];
-        if (fs.existsSync(filenameVerilog)) {
-            fs.unlinkSync(filenameVerilog);
+            resp.stimulated = false;
+            resp.stimulatedOutput = [err.toString()];
+            resp.status = 500;
+
+            if (fs.existsSync(filenameVerilog)) {
+                fs.unlinkSync(filenameVerilog);
+            }
+            if (fs.existsSync(filenameTestbench)) {
+                fs.unlinkSync(filenameTestbench);
+            }
+            if (fs.existsSync(filenameStimulus)) {
+                fs.unlinkSync(filenameStimulus);
+            }
+            if (fs.existsSync(temporaryFile)) {
+                fs.unlinkSync(temporaryFile);
+            }
+
+            res.send(JSON.stringify(resp));
         }
-        if (fs.existsSync(filenameTestbench)) {
-            fs.unlinkSync(filenameTestbench);
-        }
-        if (fs.existsSync(filenameStimulus)) {
-            fs.unlinkSync(filenameStimulus);
-        }
-        if (fs.existsSync(temporaryFile)) {
-            fs.unlinkSync(temporaryFile);
-        }
-        console.log('--- /stimulate-verilog endpoint call END #6 ---')
-        res.send(JSON.stringify(resp));
     }
-
 });
