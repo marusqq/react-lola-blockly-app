@@ -1,5 +1,6 @@
 import {sendXmlToWorkspace} from '../buttonMethods'
 import {toastInfo} from "../userAlerts";
+import {save} from "../util"
 
 export function shifterExample() {
     toastInfo("Shifter example is not implemented yet")
@@ -48,6 +49,39 @@ export function adderBasic() {
     const adderBasicXml = `<?xml version="1.0"?><xml xmlns="https://developers.google.com/blockly/xml"><variables><variable id="XC{=dhDs;A!7qyb4=n,/">c</variable><variable id="[}OtT\`3FPRJXz06kV[\`W">x</variable><variable id="FMKQqe?GDrT]U|ejp5FW">y</variable></variables><block type="module_block_module_begin" id="%CSH(GXS_lW:smRGIqLs" x="38" y="63"><field name="moduleName">Adder</field><statement name="module_parameters_input"><block type="variable_declaration_block" id="$bm}qKfRYYNIDEKwIdJx"><field name="variable_in_out_type">IN</field><field name="variable_type">WORD</field><value name="variable_in_out"><block type="variables_name_get" id="-UxOC?z3sGNP/0CjamAi"><field name="VAR" id="[}OtT\`3FPRJXz06kV[\`W">x</field></block></value><next><block type="variable_declaration_block" id="[U1$[qYgIlG}N)Iw8bT%"><field name="variable_in_out_type">IN</field><field name="variable_type">WORD</field><value name="variable_in_out"><block type="variables_name_get" id="+c2\`rDi*JVBP?41-N4X}"><field name="VAR" id="FMKQqe?GDrT]U|ejp5FW">y</field></block></value><next><block type="variable_declaration_block" id="t#NN9Stp,NI8s_{x|*9K"><field name="variable_in_out_type">OUT</field><field name="variable_type">WORD</field><value name="variable_in_out"><block type="variables_name_get" id="Dccw)F{WISX/KN)CnQ!-"><field name="VAR" id="XC{=dhDs;A!7qyb4=n,/">c</field></block></value></block></next></block></next></block></statement><statement name="module_statements_input"><block type="variables_set" id="3zT7:z1C0dO[+LoV_2JW"><field name="VAR" id="XC{=dhDs;A!7qyb4=n,/">c</field><value name="VALUE"><block type="math_arithmetic" id="$2hi0bJ|a/6E)o[1/q5r"><field name="OP">ADD</field><value name="A"><block type="variables_name_get" id="D7Xz6Rt%VUP,[^cM[lt8"><field name="VAR" id="[}OtT\`3FPRJXz06kV[\`W">x</field></block></value><value name="B"><block type="variables_name_get" id="\`|]i,dxjq3]Oj%qZ.EkA"><field name="VAR" id="FMKQqe?GDrT]U|ejp5FW">y</field></block></value></block></value></block></statement></block></xml>`
     sendXmlToWorkspace(adderBasicXml, false, "Adder.xml")
 }
+
+export function adderTestbench() {
+    const testbenchExample = `\`timescale 1ns / 1ps
+    module testbench;
+    reg [31:0] x;
+    reg [31:0] y;
+    wire [31:0] c;
+
+    Adder DUT (
+        .x(x),
+	    .y(y),
+		    .c(c)
+    );
+
+	initial begin
+	    x = 2;
+	    y = 3;
+	    #5; // delay for 5 time units
+	    $display("x = %d", x);
+	    $display("y = %d", y);
+	    $display("c = %d", c);
+	    $display("Expected result = %d", x+y);
+	    
+	    if (c != x+y) begin
+	        $display("Test failed");
+	    end else begin
+	            $display("Test passed");
+		        end
+			end
+			endmodule`
+    save("example_adder_tb.v", testbenchExample);
+}
+
 
 export function aluExample() {
     const aluXml = `<xml xmlns="https://developers.google.com/blockly/xml">
