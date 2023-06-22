@@ -229,6 +229,11 @@ function configurePlayground(playground) {
     wirthSmallPrograms.add({"Counter.Lola": examples.counterExample}, "Counter.Lola").onChange();
     wirthSmallPrograms.add({"Shifter.Lola": examples.shifterExample}, "Shifter.Lola").onChange();
 
+    // /Lola/Examples/Testbenches
+    let testbenchExamples = examplesFolder.addFolder('Testbench examples')
+    
+    testbenchExamples.add({"for Adder.Lola": examples.adderTestbench}, "for Adder.Lola").onChange();
+
     // ADD XML options
     gui.add({"Export workspace as XML": exportXml}, "Export workspace as XML").onChange();
     gui.add({"Import workspace as XML": importXml}, "Import workspace as XML").onChange();
